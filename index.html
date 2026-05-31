@@ -354,15 +354,23 @@
         }
 
         .me-interest-card .card-hint {
-            font-size: 0.72rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--mid);
+            margin-bottom: 0.35rem;
+        }
+
+        .me-interest-card .card-detail {
+            font-size: 0.73rem;
             color: var(--dim);
-            font-style: italic;
+            line-height: 1.55;
         }
 
         .me-interest-card .card-icon {
             font-size: 1.25rem;
             opacity: 0.2;
             align-self: flex-end;
+            margin-top: 0.75rem;
         }
 
         /* ── CATEGORY HUB ── */
@@ -942,7 +950,7 @@
         <h1 class="me-name">Johnson Yep</h1>
         <!-- Edit the tagline below -->
         <p class="me-tagline" style="color: var(--dim); font-size: 0.9rem;">
-            [ Your one-liner here — something honest, not a job title ]
+            Mechatronics Engineering @ uWaterloo
         </p>
     </div>
 
@@ -970,21 +978,32 @@
     <div class="me-section">
         <p class="me-section-label">Interests</p>
         <div class="me-interests">
-            <!-- Duplicate or remove cards as needed. Replace emoji + placeholder text. -->
             <div class="me-interest-card">
-                <p class="card-hint">[ Interest or hobby ]</p>
+                <div>
+                    <p class="card-hint">Computer Vision</p>
+                    <p class="card-detail">My favourite projects so far have been the ones involving OpenCV and real-time image processing</p>
+                </div>
                 <span class="card-icon">·</span>
             </div>
             <div class="me-interest-card">
-                <p class="card-hint">[ Interest or hobby ]</p>
+                <div>
+                    <p class="card-hint">Powerlifting</p>
+                    <p class="card-detail">1200 total</p>
+                </div>
                 <span class="card-icon">·</span>
             </div>
             <div class="me-interest-card">
-                <p class="card-hint">[ Interest or hobby ]</p>
+                <div>
+                    <p class="card-hint">Guitar</p>
+                    <p class="card-detail">I love playing and listening to Jack Johnson's songs</p>
+                </div>
                 <span class="card-icon">·</span>
             </div>
             <div class="me-interest-card">
-                <p class="card-hint">[ Interest or hobby ]</p>
+                <div>
+                    <p class="card-hint">Reading</p>
+                    <p class="card-detail">My favourite book is Words of Radiance by Brandon Sanderson</p>
+                </div>
                 <span class="card-icon">·</span>
             </div>
         </div>
@@ -1004,8 +1023,8 @@
         <p class="me-section-label">Links</p>
         <!-- Add your actual links below. Duplicate the <a> as needed. -->
         <div style="display:flex;flex-direction:column;gap:0.6rem;">
-            <a href="#" style="font-size:0.88rem;color:var(--dim);text-decoration:none;">GitHub →</a>
-            <a href="#" style="font-size:0.88rem;color:var(--dim);text-decoration:none;">LinkedIn →</a>
+            <a href="https://github.com/PrestigeGiraffe" target="_blank" style="font-size:0.88rem;color:var(--dim);text-decoration:none;">GitHub →</a>
+            <a href="https://linkedin.com/in/" target="_blank" style="font-size:0.88rem;color:var(--dim);text-decoration:none;">LinkedIn →</a>
             <!-- <a href="#" style="...">Instagram →</a> -->
         </div>
     </div>
@@ -1028,13 +1047,20 @@
         document.querySelectorAll('.cat-detail').forEach(d => d.style.display = 'none');
         document.getElementById('cat-' + cat).style.display = 'block';
         window.scrollTo({ top: 0, behavior: 'instant' });
+        location.hash = cat;
     }
 
     function showHub() {
         document.querySelectorAll('.cat-detail').forEach(d => d.style.display = 'none');
         document.getElementById('cat-hub').style.display = 'block';
         window.scrollTo({ top: 0, behavior: 'instant' });
+        history.replaceState(null, '', location.pathname);
     }
+
+    // Load from URL hash on page open
+    const validCats = ['toyota', 'uwfe', 'personal'];
+    const hash = location.hash.replace('#', '');
+    if (validCats.includes(hash)) showCategory(hash);
 </script>
 
 </body>
