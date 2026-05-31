@@ -47,6 +47,19 @@
             color: var(--text);
             text-decoration: none;
             letter-spacing: -0.1px;
+            cursor: pointer;
+        }
+
+        .nav-email {
+            font-size: 0.78rem;
+            color: var(--dim);
+            letter-spacing: -0.1px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
         }
 
         .tabs {
@@ -347,31 +360,45 @@
             border: 1px solid var(--border);
             border-radius: 6px;
             padding: 1.25rem;
-            min-height: 90px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            cursor: default;
+            transition: border-color 0.2s;
+        }
+
+        .me-interest-card:hover {
+            border-color: var(--border2);
         }
 
         .me-interest-card .card-hint {
             font-size: 0.78rem;
             font-weight: 600;
             color: var(--mid);
-            margin-bottom: 0.35rem;
+            transition: color 0.2s;
+        }
+
+        .me-interest-card:hover .card-hint {
+            color: var(--text);
         }
 
         .me-interest-card .card-detail {
             font-size: 0.73rem;
             color: var(--dim);
             line-height: 1.55;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.35s ease, opacity 0.25s ease, margin-top 0.35s ease;
+            margin-top: 0;
         }
 
-        .me-interest-card .card-icon {
-            font-size: 1.25rem;
-            opacity: 0.2;
-            align-self: flex-end;
-            margin-top: 0.75rem;
+        .me-interest-card:hover .card-detail {
+            max-height: 120px;
+            opacity: 1;
+            margin-top: 0.5rem;
         }
+
+        .me-interest-card .card-icon { display: none; }
 
         /* ── CATEGORY HUB ── */
         .cat-hub-wrap {
@@ -384,6 +411,25 @@
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
+        }
+
+        .cat-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .cat-section:last-child { margin-bottom: 0; }
+
+        .cat-section-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: var(--dim);
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
         }
 
         .cat-btn {
@@ -433,6 +479,29 @@
             transform: translateX(3px);
         }
 
+        .cat-btn-logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 6px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cat-btn-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .cat-btn-logo svg {
+            opacity: 0.15;
+        }
+
         /* ── BACK BUTTON ── */
         .back-btn {
             position: fixed;
@@ -480,7 +549,10 @@
 <body>
 
 <nav>
-    <a class="nav-name" href="#">Johnson Yep</a>
+    <div class="nav-left">
+        <span class="nav-name">Johnson Yep</span>
+        <span class="nav-email">jyep at uwaterloo dot ca</span>
+    </div>
     <div class="tabs">
         <button class="tab active" onclick="switchTab('projects')">Projects</button>
         <button class="tab"        onclick="switchTab('me')">Me</button>
@@ -495,27 +567,59 @@
         <p class="panel-heading">Work &amp; Projects</p>
         <p class="panel-sub">A record of things I've built — what they are, how they work, and what they changed.</p>
         <div class="cat-grid">
-            <button class="cat-btn" onclick="showCategory('toyota')">
-                <div>
-                    <p class="cat-btn-title">Toyota Boshoku</p>
-                    <p class="cat-btn-sub">Co-op &nbsp;·&nbsp; Elmira, ON &nbsp;·&nbsp; Jan – May 2026</p>
-                </div>
-                <span class="cat-btn-arrow">→</span>
-            </button>
-            <button class="cat-btn" onclick="showCategory('uwfe')">
-                <div>
-                    <p class="cat-btn-title">UWFE</p>
-                    <p class="cat-btn-sub">uWaterloo Formula Electric, Driveline &nbsp;·&nbsp; Sep 2025 – March 2026</p>
-                </div>
-                <span class="cat-btn-arrow">→</span>
-            </button>
-            <button class="cat-btn" onclick="showCategory('personal')">
-                <div>
-                    <p class="cat-btn-title">Personal Projects</p>
-                    <p class="cat-btn-sub">Side projects, experiments, and builds</p>
-                </div>
-                <span class="cat-btn-arrow">→</span>
-            </button>
+            <div class="cat-section">
+                <p class="cat-section-label">Internships</p>
+                <button class="cat-btn" onclick="showCategory('toyota')">
+                    <div class="cat-btn-logo">
+                        <img src="Images/Toyota Boshoku Logo.png" alt="Toyota Boshoku">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="12" r="4"/></svg>
+                    </div>
+                    <div style="flex:1;">
+                        <p class="cat-btn-title">Toyota Boshoku</p>
+                        <p class="cat-btn-sub">Co-op &nbsp;·&nbsp; Elmira, ON &nbsp;·&nbsp; Jan – May 2026</p>
+                    </div>
+                    <span class="cat-btn-arrow">→</span>
+                </button>
+            </div>
+            <div class="cat-section">
+                <p class="cat-section-label">Design Teams</p>
+                <button class="cat-btn" onclick="showCategory('watonomous')">
+                    <div class="cat-btn-logo">
+                        <img src="Images/Watonomous Logo.jpg" alt="Watonomous">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="12" r="4"/></svg>
+                    </div>
+                    <div style="flex:1;">
+                        <p class="cat-btn-title">Watonomous</p>
+                        <p class="cat-btn-sub">Humanoid &nbsp;·&nbsp; May 2026 – Present</p>
+                    </div>
+                    <span class="cat-btn-arrow">→</span>
+                </button>
+                <button class="cat-btn" onclick="showCategory('uwfe')">
+                    <div class="cat-btn-logo">
+                        <img src="Images/UWFE Logo.jpg" alt="UWFE">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="12" r="4"/></svg>
+                    </div>
+                    <div style="flex:1;">
+                        <p class="cat-btn-title">UWFE</p>
+                        <p class="cat-btn-sub">uWaterloo Formula Electric, Driveline &nbsp;·&nbsp; Sep 2025 – March 2026</p>
+                    </div>
+                    <span class="cat-btn-arrow">→</span>
+                </button>
+            </div>
+            <div class="cat-section">
+                <p class="cat-section-label">Personal Projects</p>
+                <button class="cat-btn" onclick="showCategory('personal')">
+                    <div class="cat-btn-logo">
+                        <img src="Images/Personal Projects Logo.png" alt="Personal Projects">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="12" r="4"/></svg>
+                    </div>
+                    <div style="flex:1;">
+                        <p class="cat-btn-title">Personal Projects</p>
+                        <p class="cat-btn-sub">Side projects, experiments, and builds</p>
+                    </div>
+                    <span class="cat-btn-arrow">→</span>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -533,7 +637,7 @@
 
         <div class="group">
             <!-- AMR COMPUTER VISION -->
-            <div class="project">
+            <div class="project" id="amr-cv">
                 <h2 class="project-title">AMR Computer Vision System</h2>
                 <div class="stack">
                     <span class="tag">Python</span>
@@ -583,7 +687,7 @@
             </div><!-- /project -->
 
             <!-- HMI DEVELOPMENT -->
-            <div class="project">
+            <div class="project" id="hmi">
                 <h2 class="project-title">HMI Development</h2>
                 <div class="stack">
                     <span class="tag">FactoryTalk View Studio</span>
@@ -593,11 +697,11 @@
                 </div>
 
                 <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;">
-                    <a href="https://www.youtube.com/watch?v=Qax2Jd6D4Ck" class="video-btn" style="margin-bottom:0;" target="_blank">
+                    <a href="https://youtu.be/kJhTjPmvhJI" class="video-btn" style="margin-bottom:0;" target="_blank">
                         <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="1,0.5 9.5,5 1,9.5"/></svg>
                         Servo History
                     </a>
-                    <a href="#" class="video-btn" style="margin-bottom:0;" target="_blank">
+                    <a href="https://youtu.be/6IlcjOIkYrk" class="video-btn" style="margin-bottom:0;" target="_blank">
                         <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="1,0.5 9.5,5 1,9.5"/></svg>
                         Screw Station
                     </a>
@@ -648,11 +752,11 @@
         </button>
 
         <p class="panel-heading">UWFE</p>
-        <p class="panel-sub">Extracurricular — uWaterloo Formula Electric, Driveline &nbsp;·&nbsp; Sep 2025 – March 2026</p>
+        <p class="panel-sub">uWaterloo Formula Electric, Driveline &nbsp;·&nbsp; Sep 2025 – March 2026</p>
 
         <div class="group">
             <!-- PUSH BAR SPACER -->
-            <div class="project">
+            <div class="project" id="push-bar-jig">
                 <h2 class="project-title">Push Bar Spacer Jig</h2>
                 <div class="stack">
                     <span class="tag">SolidWorks</span>
@@ -698,7 +802,7 @@
             </div><!-- /project -->
 
             <!-- MOTOR TEMPLATE -->
-            <div class="project">
+            <div class="project" id="motor-template">
                 <h2 class="project-title">Motor Template Jig</h2>
                 <div class="stack">
                     <span class="tag">SolidWorks</span>
@@ -746,7 +850,7 @@
             </div><!-- /project -->
 
             <!-- RADIATOR CAD -->
-            <div class="project">
+            <div class="project" id="radiator-cad">
                 <h2 class="project-title">Radiator CAD Model</h2>
                 <div class="stack">
                     <span class="tag">SolidWorks</span>
@@ -809,7 +913,7 @@
 
         <div class="group">
             <!-- GUITAR CV -->
-            <div class="project">
+            <div class="project" id="guitar-cv">
                 <h2 class="project-title">Hand Tracking Computer Vision Guitar</h2>
                 <div class="stack">
                     <span class="tag">Python</span>
@@ -818,7 +922,7 @@
                     <span class="tag">Pygame</span>
                 </div>
 
-                <a href="https://www.youtube.com/watch?v=kJhTjPmvhJI" class="video-btn" target="_blank">
+                <a href="https://youtu.be/Qax2Jd6D4Ck" class="video-btn" target="_blank">
                     <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="1,0.5 9.5,5 1,9.5"/></svg>
                     Watch Demo
                 </a>
@@ -849,7 +953,7 @@
             </div><!-- /project -->
 
             <!-- CHECKERS ROBOT -->
-            <div class="project">
+            <div class="project" id="checkers">
                 <h2 class="project-title">Autonomous Checkers Robot</h2>
                 <div class="stack">
                     <span class="tag">C++</span>
@@ -858,6 +962,11 @@
                     <span class="tag">Mechanical Design</span>
                     <span class="tag">Sensor Integration</span>
                 </div>
+
+                <a href="https://youtu.be/CZuqC9R0Z7Q" class="video-btn" target="_blank">
+                    <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="1,0.5 9.5,5 1,9.5"/></svg>
+                    Watch Demo
+                </a>
 
                 <div class="img-grid cols-2">
                     <div>
@@ -897,7 +1006,7 @@
             </div><!-- /project -->
 
             <!-- SPACE RACE -->
-            <div class="project">
+            <div class="project" id="space-race">
                 <h2 class="project-title">Space Race</h2>
                 <div class="stack">
                     <span class="tag">Java</span>
@@ -939,6 +1048,26 @@
     </div>
     </div><!-- /cat-personal -->
 
+    <!-- ── WATONOMOUS DETAIL ── -->
+    <div id="cat-watonomous" class="cat-detail" style="display:none">
+    <div class="projects-wrap">
+
+        <button class="back-btn" onclick="showHub()">
+            <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="9,0.5 0.5,5 9,9.5"/></svg>
+            Back
+        </button>
+
+        <p class="panel-heading">Watonomous</p>
+        <p class="panel-sub">Humanoid &nbsp;·&nbsp; May 2026 – Present</p>
+
+        <div class="group">
+            <p class="group-label">Embedded Software</p>
+            <p style="font-size:0.9rem;color:var(--mid);line-height:1.8;">Working on embedded systems for the humanoid team.</p>
+        </div>
+
+    </div>
+    </div><!-- /cat-watonomous -->
+
 </div><!-- /panel-projects -->
 
 <!-- ══════════════════════════ ME ══════════════════════════ -->
@@ -947,30 +1076,27 @@
 
     <!-- Name block -->
     <div class="me-name-block">
+        <div style="display:inline-flex;align-items:center;gap:0.45rem;background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:0.3rem 0.7rem;margin-bottom:1.5rem;">
+            <span style="width:6px;height:6px;border-radius:50%;background:#4a9;flex-shrink:0;display:inline-block;"></span>
+            <span style="font-size:0.72rem;color:var(--mid);letter-spacing:0.2px;">Seeking Fall 2026 internship</span>
+        </div>
         <h1 class="me-name">Johnson Yep</h1>
-        <!-- Edit the tagline below -->
-        <p class="me-tagline" style="color: var(--dim); font-size: 0.9rem;">
-            Mechatronics Engineering @ uWaterloo
-        </p>
+        <div style="display:flex; align-items:center; gap:0.6rem; margin-top:0.75rem;">
+            <!-- <img src="Images/UWaterloo Logo.png" alt="University of Waterloo" style="height:16px; opacity:0.6;"> -->
+            <img src="https://uwaterloo.ca/favicon.ico" alt="University of Waterloo" style="height:16px; opacity:0.6;">
+            <p class="me-tagline" style="color: var(--dim); font-size: 0.9rem; margin:0;">
+                Mechatronics Engineering @ uWaterloo
+            </p>
+        </div>
+        <p style="font-size:0.8rem; color:var(--dim); margin-top:0.5rem;">jyep at uwaterloo dot ca</p>
     </div>
 
-    <!-- Photo -->
-    <div class="me-section">
-        <p class="me-section-label">Photo</p>
-        <div class="me-photo-slot">
-            <!-- Replace this entire div with: <img src="images/your-photo.jpg" style="width:100%;border-radius:8px;"> -->
-            <svg style="width:32px;height:32px;opacity:0.15;" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-            <span style="font-size:0.72rem;color:var(--dim);">Add a photo</span>
-        </div>
-    </div>
 
     <!-- About -->
     <div class="me-section">
         <p class="me-section-label">About</p>
-        <!-- Replace the placeholder text below with your own -->
         <p class="me-blank-text">
-            [ Write a few sentences about yourself — who you are outside of school and work.
-            Where you're from, what drives you, what you care about. Keep it genuine. ]
+            I love building projects that integrate software and hardware to solve real-world problems. I'm always eager to learn new skills, take on challenges, and collaborate with others who share my enthusiasm for innovation.
         </p>
     </div>
 
@@ -980,52 +1106,54 @@
         <div class="me-interests">
             <div class="me-interest-card">
                 <div>
-                    <p class="card-hint">Computer Vision</p>
-                    <p class="card-detail">My favourite projects so far have been the ones involving OpenCV and real-time image processing</p>
-                </div>
-                <span class="card-icon">·</span>
-            </div>
-            <div class="me-interest-card">
-                <div>
-                    <p class="card-hint">Powerlifting</p>
-                    <p class="card-detail">1200 total</p>
-                </div>
-                <span class="card-icon">·</span>
-            </div>
-            <div class="me-interest-card">
-                <div>
                     <p class="card-hint">Guitar</p>
-                    <p class="card-detail">I love playing and listening to Jack Johnson's songs</p>
+                    <p class="card-detail">I started learning last summer and I love playing and listening to Jack Johnson's songs. Currently learning Neon by John Mayor.</p>
                 </div>
                 <span class="card-icon">·</span>
             </div>
             <div class="me-interest-card">
                 <div>
                     <p class="card-hint">Reading</p>
-                    <p class="card-detail">My favourite book is Words of Radiance by Brandon Sanderson</p>
+                    <p class="card-detail">I love reading fantasy books. My favourite book is Words of Radiance by Brandon Sanderson.</p>
+                </div>
+                <span class="card-icon">·</span>
+            </div>
+            <div class="me-interest-card">
+                <div>
+                    <p class="card-hint">Ping Pong</p>
+                    <p class="card-detail">My favourite pass time in between classes/during lunch.</p>
+                </div>
+                <span class="card-icon">·</span>
+            </div>
+            <div class="me-interest-card">
+                <div>
+                    <p class="card-hint">Powerlifting</p>
+                    <p class="card-detail">I recently got into the sport and I plan to compete soon.</p>
+                </div>
+                <span class="card-icon">·</span>
+            </div>
+            <div class="me-interest-card">
+                <div>
+                    <p class="card-hint">Video Games</p>
+                    <p class="card-detail">I used to play a lot of FPS games like Valorant and CSGO. I peaked Immortal 2 top 2000 NA rankings in Valorant.</p>
                 </div>
                 <span class="card-icon">·</span>
             </div>
         </div>
     </div>
 
-    <!-- Currently -->
-    <div class="me-section">
-        <p class="me-section-label">Currently</p>
-        <p class="me-blank-text">
-            [ What are you into right now? Reading, building, watching, learning?
-            This section is meant to feel alive and current — update it whenever. ]
-        </p>
-    </div>
-
     <!-- Links -->
     <div class="me-section">
         <p class="me-section-label">Links</p>
-        <!-- Add your actual links below. Duplicate the <a> as needed. -->
-        <div style="display:flex;flex-direction:column;gap:0.6rem;">
-            <a href="https://github.com/PrestigeGiraffe" target="_blank" style="font-size:0.88rem;color:var(--dim);text-decoration:none;">GitHub →</a>
-            <a href="https://linkedin.com/in/" target="_blank" style="font-size:0.88rem;color:var(--dim);text-decoration:none;">LinkedIn →</a>
-            <!-- <a href="#" style="...">Instagram →</a> -->
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <a href="https://github.com/PrestigeGiraffe" target="_blank" style="display:inline-flex;align-items:center;gap:0.65rem;font-size:0.95rem;color:var(--mid);text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--mid)'">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                GitHub
+            </a>
+            <a href="https://linkedin.com/in/" target="_blank" style="display:inline-flex;align-items:center;gap:0.65rem;font-size:0.95rem;color:var(--mid);text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--mid)'">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                LinkedIn
+            </a>
         </div>
     </div>
 
@@ -1058,9 +1186,21 @@
     }
 
     // Load from URL hash on page open
-    const validCats = ['toyota', 'uwfe', 'personal'];
+    const validCats = ['toyota', 'uwfe', 'personal', 'watonomous'];
     const hash = location.hash.replace('#', '');
-    if (validCats.includes(hash)) showCategory(hash);
+    if (validCats.includes(hash)) {
+        showCategory(hash);
+    } else if (hash) {
+        const el = document.getElementById(hash);
+        if (el) {
+            const detail = el.closest('.cat-detail');
+            if (detail) {
+                const cat = detail.id.replace('cat-', '');
+                showCategory(cat);
+                setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+            }
+        }
+    }
 </script>
 
 </body>
