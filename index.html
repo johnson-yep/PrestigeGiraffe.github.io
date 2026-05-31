@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Johnson Yep</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:      #0f0f0f;
+            --surface: #161616;
+            --border:  #222222;
+            --border2: #2e2e2e;
+            --text:    #e4e4e4;
+            --mid:     #888888;
+            --dim:     #444444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── NAV ── */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.75rem 3rem;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 100;
+        }
+
+        .nav-name {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: -0.1px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .tab {
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--dim);
+            cursor: pointer;
+            padding: 0.45rem 1rem;
+            border-radius: 4px;
+            transition: color 0.15s, background 0.15s;
+            letter-spacing: -0.1px;
+        }
+
+        .tab:hover { color: var(--mid); }
+
+        .tab.active {
+            color: var(--text);
+            background: var(--surface);
+        }
+
+        /* ── TAB PANELS ── */
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        /* ── PROJECTS PANEL ── */
+        .projects-wrap {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4.5rem 2rem 6rem;
+        }
+
+        .panel-heading {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            color: var(--text);
+            margin-bottom: 0.4rem;
+        }
+
+        .panel-sub {
+            font-size: 0.85rem;
+            color: var(--dim);
+            margin-bottom: 4rem;
+            line-height: 1.6;
+        }
+
+        /* Group label */
+        .group {
+            margin-bottom: 1rem;
+        }
+
+        .group-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: var(--text);
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border2);
+            margin-bottom: 3rem;
+        }
+
+        /* Single project block */
+        .project {
+            padding-bottom: 4rem;
+            margin-bottom: 4rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .project:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .project-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+            line-height: 1.3;
+        }
+
+        .stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-bottom: 2rem;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--mid);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            letter-spacing: 0.2px;
+        }
+
+        /* Image grid */
+        .img-grid {
+            display: grid;
+            gap: 6px;
+            margin-bottom: 2.25rem;
+        }
+
+        .img-grid.cols-1 { grid-template-columns: 1fr; }
+        .img-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+        .img-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+        .img-slot {
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .img-slot img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 6px;
+        }
+
+        /* placeholder shown when no real image */
+        .img-slot .ph {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .ph-icon {
+            width: 28px;
+            height: 28px;
+            opacity: 0.18;
+        }
+
+        .ph-label {
+            font-size: 0.7rem;
+            color: var(--dim);
+            font-weight: 500;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        .img-slot:hover .ph { opacity: 0.7; }
+        .img-slot:hover { border-color: var(--border2); }
+
+        .img-caption {
+            font-size: 0.68rem;
+            color: var(--dim);
+            text-align: center;
+            margin-top: 4px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* What / How / Impact */
+        .whi {
+            display: flex;
+            flex-direction: column;
+            gap: 1.75rem;
+        }
+
+        .whi-block {}
+
+        .whi-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: var(--dim);
+            margin-bottom: 0.55rem;
+        }
+
+        .whi-text {
+            font-size: 0.9rem;
+            color: var(--mid);
+            line-height: 1.8;
+        }
+
+        /* ── VIDEO DEMO BUTTON ── */
+        .video-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--mid);
+            border: 1px solid var(--border2);
+            border-radius: 4px;
+            padding: 0.3rem 0.8rem 0.3rem 0.65rem;
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: color 0.15s, border-color 0.15s;
+            letter-spacing: 0.2px;
+        }
+        .video-btn:hover {
+            color: var(--text);
+            border-color: var(--mid);
+        }
+        .video-btn svg {
+            width: 10px;
+            height: 10px;
+            flex-shrink: 0;
+        }
+
+        /* ── ME PANEL ── */
+        .me-wrap {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 5rem 2rem 6rem;
+        }
+
+        .me-name-block {
+            margin-bottom: 4rem;
+        }
+
+        .me-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -1.2px;
+            color: var(--text);
+            line-height: 1.1;
+            margin-bottom: 0.75rem;
+        }
+
+        .me-tagline {
+            font-size: 0.9rem;
+            color: var(--dim);
+            /* edit this */
+        }
+
+        /* template section */
+        .me-section {
+            margin-bottom: 3.5rem;
+        }
+
+        .me-section-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: var(--dim);
+            padding-bottom: 0.875rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .me-photo-slot {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            aspect-ratio: 3 / 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 3.5rem;
+            cursor: pointer;
+        }
+
+        .me-photo-slot:hover { border-color: var(--border2); }
+
+        .me-blank-text {
+            font-size: 0.88rem;
+            color: var(--dim);
+            line-height: 1.8;
+            font-style: italic;
+        }
+
+        .me-interests {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .me-interest-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1.25rem;
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .me-interest-card .card-hint {
+            font-size: 0.72rem;
+            color: var(--dim);
+            font-style: italic;
+        }
+
+        .me-interest-card .card-icon {
+            font-size: 1.25rem;
+            opacity: 0.2;
+            align-self: flex-end;
+        }
+
+        /* ── CATEGORY HUB ── */
+        .cat-hub-wrap {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4.5rem 2rem 6rem;
+        }
+
+        .cat-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .cat-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem 1.75rem;
+            text-align: left;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 1rem;
+        }
+
+        .cat-btn:hover {
+            border-color: var(--border2);
+            background: #1c1c1c;
+        }
+
+        .cat-btn-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: -0.3px;
+            margin-bottom: 0.3rem;
+        }
+
+        .cat-btn-sub {
+            font-size: 0.78rem;
+            color: var(--dim);
+            line-height: 1.5;
+        }
+
+        .cat-btn-arrow {
+            color: var(--dim);
+            font-size: 1rem;
+            flex-shrink: 0;
+            transition: color 0.15s, transform 0.15s;
+        }
+
+        .cat-btn:hover .cat-btn-arrow {
+            color: var(--mid);
+            transform: translateX(3px);
+        }
+
+        /* ── BACK BUTTON ── */
+        .back-btn {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            z-index: 50;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text);
+            border: 1px solid var(--border2);
+            border-radius: 6px;
+            padding: 0.7rem 1.3rem 0.7rem 1.1rem;
+            background: var(--surface);
+            font-family: inherit;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s, background 0.15s;
+            letter-spacing: 0.2px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+        }
+
+        .back-btn:hover {
+            border-color: var(--mid);
+            background: var(--border2);
+        }
+
+        .back-btn svg {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 640px) {
+            nav { padding: 1.25rem 1.5rem; }
+            .projects-wrap, .me-wrap, .cat-hub-wrap { padding: 3rem 1.25rem 5rem; }
+            .img-grid.cols-2 { grid-template-columns: 1fr; }
+            .img-grid.cols-3 { grid-template-columns: 1fr 1fr; }
+            .me-interests { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a class="nav-name" href="#">Johnson Yep</a>
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('projects')">Projects</button>
+        <button class="tab"        onclick="switchTab('me')">Me</button>
+    </div>
+</nav>
+
+<!-- ══════════════════════════ PROJECTS ══════════════════════════ -->
+<div id="panel-projects" class="panel active">
+
+    <!-- ── CATEGORY HUB ── -->
+    <div id="cat-hub" class="cat-hub-wrap">
+        <p class="panel-heading">Work &amp; Projects</p>
+        <p class="panel-sub">A record of things I've built — what they are, how they work, and what they changed.</p>
+        <div class="cat-grid">
+            <button class="cat-btn" onclick="showCategory('toyota')">
+                <div>
+                    <p class="cat-btn-title">Toyota Boshoku</p>
+                    <p class="cat-btn-sub">Co-op &nbsp;·&nbsp; Elmira, ON &nbsp;·&nbsp; Jan – May 2026</p>
+                </div>
+                <span class="cat-btn-arrow">→</span>
+            </button>
+            <button class="cat-btn" onclick="showCategory('uwfe')">
+                <div>
+                    <p class="cat-btn-title">UWFE</p>
+                    <p class="cat-btn-sub">uWaterloo Formula Electric, Driveline &nbsp;·&nbsp; Sep 2025 – March 2026</p>
+                </div>
+                <span class="cat-btn-arrow">→</span>
+            </button>
+            <button class="cat-btn" onclick="showCategory('personal')">
+                <div>
+                    <p class="cat-btn-title">Personal Projects</p>
+                    <p class="cat-btn-sub">Side projects, experiments, and builds</p>
+                </div>
+                <span class="cat-btn-arrow">→</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ── TOYOTA DETAIL ── -->
+    <div id="cat-toyota" class="cat-detail" style="display:none">
+    <div class="projects-wrap">
+
+        <button class="back-btn" onclick="showHub()">
+            <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="9,0.5 0.5,5 9,9.5"/></svg>
+            Back
+        </button>
+
+        <p class="panel-heading">Toyota Boshoku</p>
+        <p class="panel-sub">Co-op — Elmira, Ontario &nbsp;·&nbsp; Jan – May 2026</p>
+
+        <div class="group">
+            <!-- AMR COMPUTER VISION -->
+            <div class="project">
+                <h2 class="project-title">AMR Computer Vision System</h2>
+                <div class="stack">
+                    <span class="tag">Python</span>
+                    <span class="tag">OpenCV</span>
+                    <span class="tag">RTSP Streaming</span>
+                    <span class="tag">Multithreading</span>
+                    <span class="tag">Ethernet/IP</span>
+                    <span class="tag">Allen-Bradley PLC</span>
+                    <span class="tag">Studio 5000</span>
+                    <span class="tag">Ladder Logic</span>
+                </div>
+
+                <a href="https://youtu.be/E4gCH_hUtbA?si=0CwBHhj9RcS0rgQw" class="video-btn" target="_blank">
+                    <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="1,0.5 9.5,5 1,9.5"/></svg>
+                    Watch Demo
+                </a>
+
+                <div class="img-grid cols-2">
+                    <div>
+                        <div class="img-slot" style="aspect-ratio: 16/9;">
+                            <img src="Images/TBCA MiR CV Color Detection.jpg" alt="Bird's-eye rack detection" style="height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="img-caption">Bird's-eye detection output</p>
+                    </div>
+                    <div>
+                        <div class="img-slot" style="aspect-ratio: 16/9;">
+                            <img src="Images/TBCA MiR CV Color Adjustion.png" alt="Calibration interface" style="height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="img-caption">Live calibration interface</p>
+                    </div>
+                </div>
+
+                <div class="whi">
+                    <div class="whi-block">
+                        <p class="whi-label">What</p>
+                        <p class="whi-text">A real-time computer vision system to automate rack detection and decision-making for autonomous mobile robots in Toyota Boshoku's manufacturing plant. The system processes a live RTSP camera feed, applies homography and distortion correction to generate a consistent bird's-eye view of the workspace, and uses HSV colour segmentation with configurable detection regions to determine rack occupancy.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">How</p>
+                        <p class="whi-text">The system integrates with Allen-Bradley PLCs over Ethernet/IP — detection results are converted into structured boolean arrays and sent directly to trigger AMR actions. I built an interactive calibration interface with live tuning for colour thresholds, detection sensitivity, and geometric transformations, with save/load functionality for fast redeployment. A multithreaded camera pipeline eliminates frame latency and maintains stable real-time operation in a production environment.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">Impact</p>
+                        <p class="whi-text">Replaced manual operator input with a fully automated system, allowing AMRs to make real-time decisions based on actual rack availability. The system reliably moved over 100 racks per day, reduced operator workload, and minimized production delays.</p>
+                    </div>
+                </div>
+            </div><!-- /project -->
+
+            <!-- HMI DEVELOPMENT -->
+            <div class="project">
+                <h2 class="project-title">HMI Development</h2>
+                <div class="stack">
+                    <span class="tag">FactoryTalk View Studio</span>
+                    <span class="tag">Studio 5000</span>
+                    <span class="tag">Ladder Logic</span>
+                    <span class="tag">Allen-Bradley PLC</span>
+                </div>
+
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;">
+                    <a href="https://www.youtube.com/watch?v=Qax2Jd6D4Ck" class="video-btn" style="margin-bottom:0;" target="_blank">
+                        <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="1,0.5 9.5,5 1,9.5"/></svg>
+                        Servo History
+                    </a>
+                    <a href="#" class="video-btn" style="margin-bottom:0;" target="_blank">
+                        <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="1,0.5 9.5,5 1,9.5"/></svg>
+                        Screw Station
+                    </a>
+                </div>
+
+                <div class="img-grid cols-2">
+                    <div>
+                        <div class="img-slot">
+                            <img src="Images/TBCA HMI Servo.png" alt="Clip servo history HMI">
+                        </div>
+                        <p class="img-caption">Servo history display</p>
+                    </div>
+                    <div>
+                        <div class="img-slot">
+                            <img src="Images/TBCA HMI Screw Count.png" alt="Screw station HMI panel">
+                        </div>
+                        <p class="img-caption">Screw station HMI panel</p>
+                    </div>
+                </div>
+
+                <div class="whi">
+                    <div class="whi-block">
+                        <p class="whi-label">What</p>
+                        <p class="whi-text">Human-machine interface displays for multiple machines and robotic systems across the production plant. Interfaces show real-time servo speed and torque data for sonic weld robots during clip installation, track total screws and clips installed, and allow operators to selectively bypass vision-based defect detection for specific screws when needed.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">How</p>
+                        <p class="whi-text">Built using FactoryTalk View Studio and Studio 5000. Ladder logic captures and stores real-time production and diagnostic data in the Allen-Bradley PLC, communicated to the HMI through structured tags and arrays. Layouts were designed to ensure operators and maintenance staff can quickly interpret system status and act without needing to dig into raw PLC data.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">Impact</p>
+                        <p class="whi-text">Improved visibility into robot performance, enabling faster fault diagnosis and better maintenance scheduling. Tool usage tracking allowed proactive part replacement before failures, reducing unexpected downtime. Operator-controlled bypasses reduced unnecessary production stoppages without compromising quality control.</p>
+                    </div>
+                </div>
+            </div><!-- /project -->
+
+        </div><!-- /group -->
+    </div>
+    </div><!-- /cat-toyota -->
+
+    <!-- ── UWFE DETAIL ── -->
+    <div id="cat-uwfe" class="cat-detail" style="display:none">
+    <div class="projects-wrap">
+
+        <button class="back-btn" onclick="showHub()">
+            <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="9,0.5 0.5,5 9,9.5"/></svg>
+            Back
+        </button>
+
+        <p class="panel-heading">UWFE</p>
+        <p class="panel-sub">Extracurricular — uWaterloo Formula Electric, Driveline &nbsp;·&nbsp; Sep 2025 – March 2026</p>
+
+        <div class="group">
+            <!-- PUSH BAR SPACER -->
+            <div class="project">
+                <h2 class="project-title">Push Bar Spacer Jig</h2>
+                <div class="stack">
+                    <span class="tag">SolidWorks</span>
+                    <span class="tag">3D Printing</span>
+                    <span class="tag">SVN</span>
+                </div>
+
+                <div class="img-grid cols-3">
+                    <div>
+                        <div class="img-slot">
+                            <img src="Images/UWFE Push Bar Spacer CAD.png" alt="SolidWorks model">
+                        </div>
+                        <p class="img-caption">SolidWorks model</p>
+                    </div>
+                    <div>
+                        <div class="img-slot">
+                            <img src="Images/UWFE Push Bar 3D Print.png" alt="3D printed jig">
+                        </div>
+                        <p class="img-caption">3D printed jig</p>
+                    </div>
+                    <div>
+                        <div class="img-slot">
+                            <img src="Images/UWFE Push Bar Spacer Assembly Fit.png" alt="Assembly context">
+                        </div>
+                        <p class="img-caption">In-assembly context</p>
+                    </div>
+                </div>
+
+                <div class="whi">
+                    <div class="whi-block">
+                        <p class="whi-label">What</p>
+                        <p class="whi-text">A spacer jig designed to align push bar holes for accurate, repeatable drilling on the UWFE race car chassis.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">How</p>
+                        <p class="whi-text">Measured the necessary dimensions directly from the driveline SVN master assembly, modeled the spacer in SolidWorks to fit the push bar geometry, then 3D-printed the jig for immediate use.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">Impact</p>
+                        <p class="whi-text">Team members could drill holes accurately and repeatably without manual measurement each time, improving manufacturing consistency and reducing setup time.</p>
+                    </div>
+                </div>
+            </div><!-- /project -->
+
+            <!-- MOTOR TEMPLATE -->
+            <div class="project">
+                <h2 class="project-title">Motor Template Jig</h2>
+                <div class="stack">
+                    <span class="tag">SolidWorks</span>
+                    <span class="tag">AutoCAD</span>
+                    <span class="tag">GD&amp;T</span>
+                    <span class="tag">Water Jet</span>
+                    <span class="tag">SVN</span>
+                </div>
+
+                <div class="img-grid cols-3">
+                    <div>
+                        <div class="img-slot">
+                            <img src="Images/UWFE Motor Template Drawing.png" alt="Engineering drawing with GD&T">
+                        </div>
+                        <p class="img-caption">GD&amp;T drawing</p>
+                    </div>
+                    <div>
+                        <div class="img-slot">
+                            <img src="Images/UWFE Motor Template AutoCAD.png" alt="AutoCAD drawing">
+                        </div>
+                        <p class="img-caption">AutoCAD drawing</p>
+                    </div>
+                    <div>
+                        <div class="img-slot">
+                            <img src="Images/UWFE Motor Template SolidWorks.png" alt="SolidWorks model">
+                        </div>
+                        <p class="img-caption">SolidWorks model</p>
+                    </div>
+                </div>
+
+                <div class="whi">
+                    <div class="whi-block">
+                        <p class="whi-label">What</p>
+                        <p class="whi-text">A motor template jig to improve alignment and repeatability of chassis hole and insert manufacturing for the UWFE driveline.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">How</p>
+                        <p class="whi-text">Modeled the jig in SolidWorks using measurements taken from the SVN driveline master assembly. Drafted a full engineering drawing with GD&T specifications and had it validated by a senior team member for manufacturability. Water-jetted the aluminium base to dimension, then milled holes to ±0.1 mm tolerance.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">Impact</p>
+                        <p class="whi-text">Standardized hole alignment across driveline machining operations, enabling team members to work faster and with greater accuracy.</p>
+                    </div>
+                </div>
+            </div><!-- /project -->
+
+            <!-- RADIATOR CAD -->
+            <div class="project">
+                <h2 class="project-title">Radiator CAD Model</h2>
+                <div class="stack">
+                    <span class="tag">SolidWorks</span>
+                    <span class="tag">Caliper Measurement</span>
+                    <span class="tag">SVN</span>
+                </div>
+
+                <div class="img-grid cols-3">
+                    <div>
+                        <div class="img-slot">
+                            <img src="Images/UWFE Radiator Physical.jpg" alt="Physical radiator">
+                        </div>
+                        <p class="img-caption">Physical radiator</p>
+                    </div>
+                    <div>
+                        <div class="img-slot">
+                            <img src="Images/UWFE Radiator CAD Front.png" alt="SolidWorks model front">
+                        </div>
+                        <p class="img-caption">SolidWorks model (front)</p>
+                    </div>
+                    <div>
+                        <div class="img-slot">
+                            <img src="Images/UWFE Radiator CAD Back.png" alt="SolidWorks model back">
+                        </div>
+                        <p class="img-caption">SolidWorks model (back)</p>
+                    </div>
+                </div>
+
+                <div class="whi">
+                    <div class="whi-block">
+                        <p class="whi-label">What</p>
+                        <p class="whi-text">An accurate CAD replica of the physical cooling system radiator for integration into the UWFE driveline assembly model.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">How</p>
+                        <p class="whi-text">Measured all key radiator dimensions using calipers, then recreated the geometry in SolidWorks with matching form and mounting features. Committed the finished model to the team's TortoiseSVN master assembly.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">Impact</p>
+                        <p class="whi-text">The model served as a key component in completing the cooling system design, allowing the team to verify spatial packaging and fitment in the full driveline assembly before fabrication.</p>
+                    </div>
+                </div>
+            </div><!-- /project -->
+
+        </div><!-- /group -->
+    </div>
+    </div><!-- /cat-uwfe -->
+
+    <!-- ── PERSONAL DETAIL ── -->
+    <div id="cat-personal" class="cat-detail" style="display:none">
+    <div class="projects-wrap">
+
+        <button class="back-btn" onclick="showHub()">
+            <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="9,0.5 0.5,5 9,9.5"/></svg>
+            Back
+        </button>
+
+        <p class="panel-heading">Personal Projects</p>
+        <p class="panel-sub">Side projects, experiments, and builds.</p>
+
+        <div class="group">
+            <!-- GUITAR CV -->
+            <div class="project">
+                <h2 class="project-title">Hand Tracking Computer Vision Guitar</h2>
+                <div class="stack">
+                    <span class="tag">Python</span>
+                    <span class="tag">OpenCV</span>
+                    <span class="tag">MediaPipe</span>
+                    <span class="tag">Pygame</span>
+                </div>
+
+                <a href="https://www.youtube.com/watch?v=kJhTjPmvhJI" class="video-btn" target="_blank">
+                    <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="1,0.5 9.5,5 1,9.5"/></svg>
+                    Watch Demo
+                </a>
+
+                <div class="img-grid cols-1">
+                    <div>
+                        <div class="img-slot">
+                            <img src="Images/CV Guitar.png" alt="Hand tracking with chord overlay">
+                        </div>
+                        <p class="img-caption">Live hand tracking with chord diagram overlay</p>
+                    </div>
+                </div>
+
+                <div class="whi">
+                    <div class="whi-block">
+                        <p class="whi-label">What</p>
+                        <p class="whi-text">A real-time computer vision guitar interaction system using a webcam feed to detect hand and finger movements and translate them into musical input. The left hand selects chords based on finger positions; the right hand triggers individual notes. Visual overlays display chord diagrams and fingertip indicators in the live feed.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">How</p>
+                        <p class="whi-text">Built custom hand-tracking logic on top of MediaPipe, interpreting finger states by comparing landmark positions to determine which fingers are raised or pressed. Detected gestures map to chord and note audio files via Pygame. An event-based playback system only fires on new finger presses — preventing repeated audio from a held position. Optimized frame processing to maintain sub-frame latency from a live camera feed.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">Impact</p>
+                        <p class="whi-text">This project was the entry point into real-time computer vision — showing that a standard webcam could drive a low-latency interactive system with meaningful accuracy. The core ideas around frame processing, gesture mapping, and real-time performance directly informed the approach taken on the AMR CV system at Toyota Boshoku.</p>
+                    </div>
+                </div>
+            </div><!-- /project -->
+
+            <!-- CHECKERS ROBOT -->
+            <div class="project">
+                <h2 class="project-title">Autonomous Checkers Robot</h2>
+                <div class="stack">
+                    <span class="tag">C++</span>
+                    <span class="tag">VEX Robotics</span>
+                    <span class="tag">Embedded Systems</span>
+                    <span class="tag">Mechanical Design</span>
+                    <span class="tag">Sensor Integration</span>
+                </div>
+
+                <div class="img-grid cols-2">
+                    <div>
+                        <div class="img-slot">
+                            <img src="Images/Checkers Initial Concept.png" alt="Initial concept sketch">
+                        </div>
+                        <p class="img-caption">Initial concept</p>
+                    </div>
+                    <div>
+                        <div class="img-slot">
+                            <img src="Images/Checkers First Functioning Prototype.png" alt="First functional prototype">
+                        </div>
+                        <p class="img-caption">First functional prototype</p>
+                    </div>
+                    <div>
+                        <div class="img-slot">
+                            <img src="Images/Checkers Final Design.JPEG" alt="Final design">
+                        </div>
+                        <p class="img-caption">Final design</p>
+                    </div>
+                </div>
+
+                <div class="whi">
+                    <div class="whi-block">
+                        <p class="whi-label">What</p>
+                        <p class="whi-text">An autonomous checkers-playing robot built to compete against a human player. The system scans the board with optical and distance sensors, identifies piece locations, determines a legal move, and physically executes it using a motorized claw and X-Y gantry mechanism — all under strict hardware and size constraints.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">How</p>
+                        <p class="whi-text">C++ firmware represents the board as a 2D array, handling piece detection, legal move generation, promotion logic, and game-over detection. The X-Y motion system positions the claw over target squares and the claw mechanism picks and places pieces. Multiple prototype iterations improved chassis stability, reduced jamming, refined claw and sensor alignment, and adjusted the checkers pieces themselves for more reliable detection.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">Impact</p>
+                        <p class="whi-text">The final robot reliably played a complete game of checkers — scanning the board, selecting legal moves, and executing them. Demonstrated end-to-end integration of mechanical design, sensors, and embedded software. Strengthened skills in prototyping iteration, debugging under physical constraints, and full-system mechatronic design.</p>
+                    </div>
+                </div>
+            </div><!-- /project -->
+
+            <!-- SPACE RACE -->
+            <div class="project">
+                <h2 class="project-title">Space Race</h2>
+                <div class="stack">
+                    <span class="tag">Java</span>
+                    <span class="tag">JavaFX</span>
+                    <span class="tag">Object-Oriented Design</span>
+                </div>
+
+                <a href="https://www.youtube.com/watch?v=lK5rbWTBT0M&t=1s" class="video-btn" target="_blank">
+                    <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="1,0.5 9.5,5 1,9.5"/></svg>
+                    Watch Demo
+                </a>
+
+                <div class="img-grid cols-1">
+                    <div>
+                        <div class="img-slot">
+                            <img src="Images/Space Race.png" alt="Space Race gameplay">
+                        </div>
+                        <p class="img-caption">Gameplay</p>
+                    </div>
+                </div>
+
+                <div class="whi">
+                    <div class="whi-block">
+                        <p class="whi-label">What</p>
+                        <p class="whi-text">A 2D survival shooter built from scratch in Java using JavaFX. The player controls a spaceship, dodges randomly spawned asteroids, shoots aliens, and survives as long as possible. Includes a full menu flow, health tracking, enemy combat, collision handling, and a game over screen with persistent high-score statistics.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">How</p>
+                        <p class="whi-text">Object-oriented architecture with separate classes for each entity type — spaceship, aliens, asteroids, projectiles, health bar, and stat tracker. Real-time gameplay is driven by a JavaFX AnimationTimer loop handling movement, spawning, collision detection, and scoring. Smooth held-key movement uses a key-state map instead of single key events. Directional projectile motion is calculated from normalized velocity components toward mouse-click targets; enemy shots track the player. Stats persist between sessions via file I/O.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">Impact</p>
+                        <p class="whi-text">Built and shipped a complete, playable application end-to-end — from architecture to gameplay loop to persistent state. Developed a solid feel for managing multiple interacting real-time systems and clean OOP design under a tight game loop.</p>
+                    </div>
+                </div>
+            </div><!-- /project -->
+
+        </div><!-- /group -->
+    </div>
+    </div><!-- /cat-personal -->
+
+</div><!-- /panel-projects -->
+
+<!-- ══════════════════════════ ME ══════════════════════════ -->
+<div id="panel-me" class="panel">
+<div class="me-wrap">
+
+    <!-- Name block -->
+    <div class="me-name-block">
+        <h1 class="me-name">Johnson Yep</h1>
+        <!-- Edit the tagline below -->
+        <p class="me-tagline" style="color: var(--dim); font-size: 0.9rem;">
+            [ Your one-liner here — something honest, not a job title ]
+        </p>
+    </div>
+
+    <!-- Photo -->
+    <div class="me-section">
+        <p class="me-section-label">Photo</p>
+        <div class="me-photo-slot">
+            <!-- Replace this entire div with: <img src="images/your-photo.jpg" style="width:100%;border-radius:8px;"> -->
+            <svg style="width:32px;height:32px;opacity:0.15;" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <span style="font-size:0.72rem;color:var(--dim);">Add a photo</span>
+        </div>
+    </div>
+
+    <!-- About -->
+    <div class="me-section">
+        <p class="me-section-label">About</p>
+        <!-- Replace the placeholder text below with your own -->
+        <p class="me-blank-text">
+            [ Write a few sentences about yourself — who you are outside of school and work.
+            Where you're from, what drives you, what you care about. Keep it genuine. ]
+        </p>
+    </div>
+
+    <!-- Interests -->
+    <div class="me-section">
+        <p class="me-section-label">Interests</p>
+        <div class="me-interests">
+            <!-- Duplicate or remove cards as needed. Replace emoji + placeholder text. -->
+            <div class="me-interest-card">
+                <p class="card-hint">[ Interest or hobby ]</p>
+                <span class="card-icon">·</span>
+            </div>
+            <div class="me-interest-card">
+                <p class="card-hint">[ Interest or hobby ]</p>
+                <span class="card-icon">·</span>
+            </div>
+            <div class="me-interest-card">
+                <p class="card-hint">[ Interest or hobby ]</p>
+                <span class="card-icon">·</span>
+            </div>
+            <div class="me-interest-card">
+                <p class="card-hint">[ Interest or hobby ]</p>
+                <span class="card-icon">·</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Currently -->
+    <div class="me-section">
+        <p class="me-section-label">Currently</p>
+        <p class="me-blank-text">
+            [ What are you into right now? Reading, building, watching, learning?
+            This section is meant to feel alive and current — update it whenever. ]
+        </p>
+    </div>
+
+    <!-- Links -->
+    <div class="me-section">
+        <p class="me-section-label">Links</p>
+        <!-- Add your actual links below. Duplicate the <a> as needed. -->
+        <div style="display:flex;flex-direction:column;gap:0.6rem;">
+            <a href="#" style="font-size:0.88rem;color:var(--dim);text-decoration:none;">GitHub →</a>
+            <a href="#" style="font-size:0.88rem;color:var(--dim);text-decoration:none;">LinkedIn →</a>
+            <!-- <a href="#" style="...">Instagram →</a> -->
+        </div>
+    </div>
+
+</div>
+</div><!-- /panel-me -->
+
+<script>
+    function switchTab(name) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('panel-' + name).classList.add('active');
+        event.currentTarget.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        if (name === 'projects') showHub();
+    }
+
+    function showCategory(cat) {
+        document.getElementById('cat-hub').style.display = 'none';
+        document.querySelectorAll('.cat-detail').forEach(d => d.style.display = 'none');
+        document.getElementById('cat-' + cat).style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    function showHub() {
+        document.querySelectorAll('.cat-detail').forEach(d => d.style.display = 'none');
+        document.getElementById('cat-hub').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+</script>
+
+</body>
+</html>
