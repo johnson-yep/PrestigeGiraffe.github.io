@@ -4,21 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Johnson Yep</title>
+    <meta name="theme-color" content="#faf5ec">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg:      #0f0f0f;
-            --surface: #161616;
-            --border:  #222222;
-            --border2: #2e2e2e;
-            --text:    #f0f0f0;
-            --mid:     #a8a8a8;
-            --dim:     #787878;
+            --bg:      #faf5ec;
+            --surface: #f1e8d8;
+            --border:  #e8dcc8;
+            --border2: #d8c6ac;
+            --text:    #2f2419;
+            --mid:     #5f4d3a;
+            --dim:     #8a7460;
+            --accent:  #b4592b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; color-scheme: light; }
+
+        ::selection { background: #f3ddc4; }
+
+        .panel-heading, .project-title, .me-name, .cat-btn-title {
+            font-family: 'Fraunces', Georgia, serif;
+        }
 
         body {
             background: var(--bg);
@@ -125,7 +133,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2.5px;
-            color: var(--text);
+            color: var(--accent);
             padding-bottom: 1rem;
             border-bottom: 1px solid var(--border2);
             margin-bottom: 3rem;
@@ -166,8 +174,8 @@
             color: var(--mid);
             background: var(--surface);
             border: 1px solid var(--border);
-            padding: 0.2rem 0.6rem;
-            border-radius: 3px;
+            padding: 0.22rem 0.7rem;
+            border-radius: 999px;
             letter-spacing: 0.2px;
         }
 
@@ -186,7 +194,7 @@
             position: relative;
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: 10px;
             overflow: hidden;
             cursor: pointer;
         }
@@ -195,7 +203,7 @@
             width: 100%;
             height: auto;
             display: block;
-            border-radius: 6px;
+            border-radius: 10px;
         }
 
         /* placeholder shown when no real image */
@@ -249,13 +257,13 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2.5px;
-            color: var(--dim);
+            color: var(--accent);
             margin-bottom: 0.55rem;
         }
 
         .whi-text {
             font-size: 0.9rem;
-            color: #cccccc;
+            color: #4f4030;
             line-height: 1.8;
         }
 
@@ -268,16 +276,16 @@
             font-weight: 500;
             color: var(--mid);
             border: 1px solid var(--border2);
-            border-radius: 4px;
-            padding: 0.3rem 0.8rem 0.3rem 0.65rem;
+            border-radius: 999px;
+            padding: 0.3rem 0.9rem 0.3rem 0.75rem;
             text-decoration: none;
             margin-bottom: 2rem;
             transition: color 0.15s, border-color 0.15s, transform 0.12s ease;
             letter-spacing: 0.2px;
         }
         .video-btn:hover {
-            color: var(--text);
-            border-color: var(--mid);
+            color: var(--accent);
+            border-color: var(--accent);
         }
         .video-btn:active { transform: scale(0.95); }
         .video-btn svg {
@@ -299,8 +307,8 @@
 
         .me-name {
             font-size: 2.5rem;
-            font-weight: 700;
-            letter-spacing: -1.2px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
             color: var(--text);
             line-height: 1.1;
             margin-bottom: 0.75rem;
@@ -322,7 +330,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2.5px;
-            color: var(--dim);
+            color: var(--accent);
             padding-bottom: 0.875rem;
             border-bottom: 1px solid var(--border);
             margin-bottom: 1.5rem;
@@ -331,7 +339,7 @@
         .me-photo-slot {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 12px;
             aspect-ratio: 3 / 2;
             display: flex;
             flex-direction: column;
@@ -360,7 +368,7 @@
         .me-interest-card {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: 10px;
             padding: 1.25rem;
             display: flex;
             flex-direction: column;
@@ -429,7 +437,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2.5px;
-            color: var(--dim);
+            color: var(--accent);
             padding-bottom: 0.75rem;
             border-bottom: 1px solid var(--border);
         }
@@ -437,7 +445,7 @@
         .cat-btn {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 2rem 1.75rem;
             text-align: left;
             cursor: pointer;
@@ -452,8 +460,9 @@
 
         .cat-btn:hover {
             border-color: var(--border2);
-            background: #1c1c1c;
+            background: #fdf9f1;
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(140, 90, 40, 0.10);
         }
 
         .cat-btn:active { transform: translateY(0) scale(0.99); }
@@ -480,15 +489,15 @@
         }
 
         .cat-btn:hover .cat-btn-arrow {
-            color: var(--mid);
+            color: var(--accent);
             transform: translateX(3px);
         }
 
         .cat-btn-logo {
             width: 52px;
             height: 52px;
-            border-radius: 6px;
-            background: var(--bg);
+            border-radius: 10px;
+            background: #ffffff;
             border: 1px solid var(--border);
             flex-shrink: 0;
             overflow: hidden;
@@ -520,19 +529,19 @@
             font-weight: 600;
             color: var(--text);
             border: 1px solid var(--border2);
-            border-radius: 6px;
+            border-radius: 10px;
             padding: 0.7rem 1.3rem 0.7rem 1.1rem;
             background: var(--surface);
             font-family: inherit;
             cursor: pointer;
             transition: color 0.15s, border-color 0.15s, background 0.15s, transform 0.15s ease;
             letter-spacing: 0.2px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 16px rgba(130, 85, 45, 0.18);
         }
 
         .back-btn:hover {
-            border-color: var(--mid);
-            background: var(--border2);
+            border-color: var(--accent);
+            background: #fdf9f1;
             transform: translateY(-2px);
         }
 
@@ -577,17 +586,17 @@
 
 <nav>
     <div class="nav-left">
-        <span class="nav-name">Johnson Yep</span>
+        <a class="nav-name" href="#">Johnson Yep</a>
         <span class="nav-email">jyep at uwaterloo dot ca</span>
     </div>
     <div class="tabs">
-        <button class="tab active" onclick="switchTab('projects')">Projects</button>
-        <button class="tab"        onclick="switchTab('me')">Me</button>
+        <button class="tab active" id="tab-projects" onclick="navigate('')">Projects</button>
+        <button class="tab"        id="tab-me" onclick="navigate('me')">Me</button>
     </div>
 </nav>
 
 <!-- Single global back button (lives outside animated panels so it shows instantly) -->
-<button class="back-btn" id="global-back" onclick="showHub()" style="display:none">
+<button class="back-btn" id="global-back" onclick="navigate('')" style="display:none">
     <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="9,0.5 0.5,5 9,9.5"/></svg>
     Back
 </button>
@@ -598,11 +607,10 @@
     <!-- ── CATEGORY HUB ── -->
     <div id="cat-hub" class="cat-hub-wrap">
         <p class="panel-heading">Work &amp; Projects</p>
-        <p class="panel-sub">A record of things I've built — what they are, how they work, and what they changed.</p>
         <div class="cat-grid">
             <div class="cat-section">
                 <p class="cat-section-label">Internships</p>
-                <button class="cat-btn" onclick="showCategory('toyota')">
+                <button class="cat-btn" onclick="navigate('toyota')">
                     <div class="cat-btn-logo">
                         <img src="Images/Toyota Boshoku Logo.png" alt="Toyota Boshoku">
                     </div>
@@ -615,7 +623,7 @@
             </div>
             <div class="cat-section">
                 <p class="cat-section-label">Design Teams</p>
-                <button class="cat-btn" onclick="showCategory('watonomous')">
+                <button class="cat-btn" onclick="navigate('watonomous')">
                     <div class="cat-btn-logo">
                         <img src="Images/Watonomous Logo.jpg" alt="Watonomous">
                     </div>
@@ -625,7 +633,7 @@
                     </div>
                     <span class="cat-btn-arrow">→</span>
                 </button>
-                <button class="cat-btn" onclick="showCategory('uwfe')">
+                <button class="cat-btn" onclick="navigate('uwfe')">
                     <div class="cat-btn-logo">
                         <img src="Images/UWFE Logo.jpg" alt="UWFE">
                     </div>
@@ -638,7 +646,7 @@
             </div>
             <div class="cat-section">
                 <p class="cat-section-label">Personal Projects</p>
-                <button class="cat-btn" onclick="showCategory('personal')">
+                <button class="cat-btn" onclick="navigate('personal')">
                     <div class="cat-btn-logo">
                         <img src="Images/Personal Projects Logo.png" alt="Personal Projects">
                     </div>
@@ -918,6 +926,7 @@
     </div>
     </div><!-- /cat-uwfe -->
 
+
     <!-- ── PERSONAL DETAIL ── -->
     <div id="cat-personal" class="cat-detail" style="display:none">
     <div class="projects-wrap">
@@ -1085,8 +1094,8 @@
 
     <!-- Name block -->
     <div class="me-name-block">
-        <div style="display:inline-flex;align-items:center;gap:0.45rem;background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:0.3rem 0.7rem;margin-bottom:1.5rem;">
-            <span style="width:6px;height:6px;border-radius:50%;background:#4a9;flex-shrink:0;display:inline-block;"></span>
+        <div style="display:inline-flex;align-items:center;gap:0.45rem;background:var(--surface);border:1px solid var(--border2);border-radius:999px;padding:0.3rem 0.8rem;margin-bottom:1.5rem;">
+            <span style="width:6px;height:6px;border-radius:50%;background:#5e9c66;flex-shrink:0;display:inline-block;"></span>
             <span style="font-size:0.72rem;color:var(--mid);letter-spacing:0.2px;">Seeking Fall 2026 internship</span>
         </div>
         <h1 class="me-name">Johnson Yep</h1>
@@ -1173,55 +1182,89 @@
         el.addEventListener('animationend', () => el.classList.remove('anim-in'), { once: true });
     }
 
-    function switchTab(name) {
+    const validCats = ['toyota', 'uwfe', 'personal', 'watonomous'];
+
+    /* ── Pure view renderers — show/hide only, never touch history ── */
+
+    function renderTab(name) {
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        const panel = document.getElementById('panel-' + name);
-        panel.classList.add('active');
-        event.currentTarget.classList.add('active');
-        document.getElementById('global-back').style.display = 'none';
-        window.scrollTo({ top: 0, behavior: 'instant' });
-        if (name === 'projects') showHub();
-        else animateIn(panel);
+        document.getElementById('panel-' + name).classList.add('active');
+        document.getElementById('tab-' + name).classList.add('active');
     }
 
-    function showCategory(cat) {
+    function renderHub() {
+        document.querySelectorAll('.cat-detail').forEach(d => d.style.display = 'none');
+        const hub = document.getElementById('cat-hub');
+        hub.style.display = 'block';
+        animateIn(hub);
+        document.getElementById('global-back').style.display = 'none';
+    }
+
+    function renderCategory(cat) {
         document.getElementById('cat-hub').style.display = 'none';
         document.querySelectorAll('.cat-detail').forEach(d => d.style.display = 'none');
         const detail = document.getElementById('cat-' + cat);
         detail.style.display = 'block';
         animateIn(detail);
         document.getElementById('global-back').style.display = 'inline-flex';
-        window.scrollTo({ top: 0, behavior: 'instant' });
-        location.hash = cat;
     }
 
-    function showHub() {
-        document.querySelectorAll('.cat-detail').forEach(d => d.style.display = 'none');
-        const hub = document.getElementById('cat-hub');
-        hub.style.display = 'block';
-        animateIn(hub);
-        document.getElementById('global-back').style.display = 'none';
-        window.scrollTo({ top: 0, behavior: 'instant' });
-        history.replaceState(null, '', location.pathname);
+    /* ── Hash router ── */
+
+    // Accepts both '#toyota' and '#/toyota' forms.
+    function currentRoute() {
+        return decodeURIComponent(location.hash.replace(/^#\/?/, ''));
     }
 
-    // Load from URL hash on page open
-    const validCats = ['toyota', 'uwfe', 'personal', 'watonomous'];
-    const hash = location.hash.replace('#', '');
-    if (validCats.includes(hash)) {
-        showCategory(hash);
-    } else if (hash) {
-        const el = document.getElementById(hash);
+    // Render whatever view the current hash describes. Runs on page load
+    // (deep links) and on every hashchange (back/forward buttons included).
+    function applyRoute() {
+        const route = currentRoute();
+
+        if (route === 'me') {
+            renderTab('me');
+            document.getElementById('global-back').style.display = 'none';
+            animateIn(document.getElementById('panel-me'));
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            return;
+        }
+
+        renderTab('projects');
+
+        if (validCats.includes(route)) {
+            renderCategory(route);
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            return;
+        }
+
+        // Anchor to a specific project (e.g. #guitar-cv): open the view
+        // that contains it, then scroll to it.
+        const el = route ? document.getElementById(route) : null;
         if (el) {
             const detail = el.closest('.cat-detail');
-            if (detail) {
-                const cat = detail.id.replace('cat-', '');
-                showCategory(cat);
-                setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
-            }
+            if (detail) renderCategory(detail.id.replace('cat-', ''));
+            else renderHub();
+            setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+            return;
         }
+
+        renderHub();
+        window.scrollTo({ top: 0, behavior: 'instant' });
     }
+
+    // All on-site navigation goes through here: setting location.hash pushes
+    // a browser history entry, and the hashchange listener does the rendering.
+    function navigate(route) {
+        if (route === currentRoute()) {
+            applyRoute();
+            return;
+        }
+        location.hash = route;
+    }
+
+    window.addEventListener('hashchange', applyRoute);
+    applyRoute();
 </script>
 
 </body>
