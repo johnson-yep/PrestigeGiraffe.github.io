@@ -554,11 +554,15 @@
             --fade-l: 0px;
             --fade-r: 0px;
             overflow-x: auto;
+            scroll-behavior: auto; /* keep programmatic scrollLeft writes instant */
             scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
+            cursor: grab;
             -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent);
             mask-image: linear-gradient(to right, transparent, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent);
         }
+
+        .skills-scroll.dragging { cursor: grabbing; }
 
         .skills-scroll::-webkit-scrollbar { display: none; }
 
@@ -570,6 +574,15 @@
             gap: 0.4rem;
             width: max-content;
             padding: 0.25rem 0.25rem 0.75rem;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .skills-row img,
+        .skills-row svg {
+            -webkit-user-drag: none;
+            user-drag: none;
+            pointer-events: none;
         }
 
         .skill-item {
@@ -1592,6 +1605,7 @@
 
     /* ── Skills row edge fade ── */
     // Show a fade only on sides that have more content to scroll to
+    // (once the infinite carousel is running, both sides always do)
     function updateSkillsFade() {
         const el = document.getElementById('skills-scroll');
         el.classList.toggle('fade-left', el.scrollLeft > 4);
@@ -1601,6 +1615,126 @@
     document.getElementById('skills-scroll').addEventListener('scroll', updateSkillsFade, { passive: true });
     window.addEventListener('resize', updateSkillsFade);
     updateSkillsFade();
+
+    /* ── Skills carousel: infinite loop, auto-scroll, drag ── */
+    const skillsScroller = document.getElementById('skills-scroll');
+    const skillsRow = skillsScroller.querySelector('.skills-row');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const SKILLS_SPEED = 28;          // auto-scroll speed, px per second
+    const SKILLS_RESUME_DELAY = 1200; // ms of stillness before auto-scroll resumes
+
+    let skillsSetWidth = 0;   // width of one full set of items, incl. the seam gap (0 = not initialized)
+    let skillsPos = 0;        // float scroll position — scrollLeft alone is too coarse at slow speeds
+    let skillsDragging = false;
+    let skillsVelocity = 0;   // px/ms from a mouse drag, for release inertia
+    let skillsResumeAt = 0;   // auto-scroll stays idle until this timestamp
+    let skillsLastTick = null;
+    let skillsDragX = 0;
+    let skillsDragT = 0;
+
+    // Keep the position inside the middle copy of the items, so there is
+    // always a full set on either side and the seam is never visible
+    function skillsWrap() {
+        while (skillsPos < skillsSetWidth) skillsPos += skillsSetWidth;
+        while (skillsPos >= skillsSetWidth * 2) skillsPos -= skillsSetWidth;
+        skillsScroller.scrollLeft = skillsPos;
+    }
+
+    // Runs once, the first time the hub is actually visible — clone widths
+    // are 0 while the panel is display:none (e.g. deep links to a project)
+    function initSkillsCarousel() {
+        if (skillsSetWidth || skillsScroller.clientWidth === 0) return;
+
+        const originals = Array.from(skillsRow.children);
+        const baseWidth = skillsRow.scrollWidth;
+        // Enough copies that the working range keeps a full viewport of
+        // content on both sides of any position
+        const copies = Math.max(3, Math.ceil((skillsScroller.clientWidth * 2) / baseWidth) + 2);
+        for (let c = 1; c < copies; c++) {
+            originals.forEach(item => {
+                const clone = item.cloneNode(true);
+                clone.setAttribute('aria-hidden', 'true');
+                skillsRow.appendChild(clone);
+            });
+        }
+        skillsSetWidth = skillsRow.children[originals.length].offsetLeft - skillsRow.children[0].offsetLeft;
+        skillsPos = skillsSetWidth;
+        skillsScroller.scrollLeft = skillsPos;
+        requestAnimationFrame(skillsTick);
+    }
+
+    function skillsTick(t) {
+        requestAnimationFrame(skillsTick);
+        // Cap dt so returning from a hidden tab (where rAF is suspended)
+        // doesn't produce one giant jump
+        const dt = skillsLastTick === null ? 0 : Math.min(t - skillsLastTick, 100);
+        skillsLastTick = t;
+        if (skillsDragging || dt === 0) return;
+
+        if (Math.abs(skillsVelocity) > 0.02) {
+            // Inertia from a mouse drag release
+            skillsPos -= skillsVelocity * dt;
+            skillsVelocity *= Math.pow(0.94, dt / 16);
+            skillsResumeAt = t + SKILLS_RESUME_DELAY;
+            skillsWrap();
+        } else if (t >= skillsResumeAt && !reducedMotion.matches) {
+            skillsVelocity = 0;
+            skillsPos += SKILLS_SPEED * dt / 1000;
+            skillsWrap();
+        }
+    }
+
+    // Mouse drag-to-scroll. Touch is left to native panning (the scroll
+    // listener below keeps the loop seamless there).
+    skillsScroller.addEventListener('pointerdown', (e) => {
+        if (e.pointerType !== 'mouse' || e.button !== 0 || !skillsSetWidth) return;
+        skillsDragging = true;
+        skillsVelocity = 0;
+        skillsDragX = e.clientX;
+        skillsDragT = performance.now();
+        skillsScroller.classList.add('dragging');
+        skillsScroller.setPointerCapture(e.pointerId);
+        e.preventDefault(); // no text selection / native drag ghost
+    });
+
+    skillsScroller.addEventListener('pointermove', (e) => {
+        if (!skillsDragging) return;
+        const dx = e.clientX - skillsDragX;
+        const now = performance.now();
+        const dtMove = Math.max(now - skillsDragT, 1);
+        skillsDragX = e.clientX;
+        skillsDragT = now;
+        skillsVelocity = 0.8 * skillsVelocity + 0.2 * (dx / dtMove);
+        skillsPos -= dx;
+        skillsWrap();
+    });
+
+    function skillsEndDrag() {
+        if (!skillsDragging) return;
+        skillsDragging = false;
+        skillsScroller.classList.remove('dragging');
+        if (reducedMotion.matches || Math.abs(skillsVelocity) < 0.05) skillsVelocity = 0;
+        skillsResumeAt = performance.now() + SKILLS_RESUME_DELAY;
+    }
+    skillsScroller.addEventListener('pointerup', skillsEndDrag);
+    skillsScroller.addEventListener('pointercancel', skillsEndDrag);
+
+    // Native scrolls (touch pan, trackpad) move scrollLeft without going
+    // through skillsPos — adopt them, pause auto-scroll, and re-wrap
+    skillsScroller.addEventListener('scroll', () => {
+        if (!skillsSetWidth) return;
+        if (Math.abs(skillsScroller.scrollLeft - skillsPos) > 2) {
+            skillsPos = skillsScroller.scrollLeft;
+            skillsVelocity = 0;
+            skillsResumeAt = performance.now() + SKILLS_RESUME_DELAY;
+            skillsWrap();
+        }
+    }, { passive: true });
+
+    initSkillsCarousel();
+    // The hub may have been hidden on load (deep link) — init once it shows
+    window.addEventListener('hashchange', initSkillsCarousel);
 </script>
 
 </body>
