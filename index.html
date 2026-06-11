@@ -196,7 +196,7 @@
             border: 1px solid var(--border);
             border-radius: 10px;
             overflow: hidden;
-            cursor: pointer;
+            cursor: zoom-in;
         }
 
         .img-slot img {
@@ -558,6 +558,62 @@
             transition: color 0.15s, transform 0.12s ease;
         }
         .me-section a:active { transform: scale(0.96); }
+
+        /* ── LIGHTBOX ── */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(31, 24, 15, 0.88);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.18s ease, visibility 0.18s ease;
+        }
+
+        .lightbox.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 6px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 1.1rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .lightbox-close:hover {
+            border-color: var(--mid);
+            background: var(--border);
+        }
+
+        body.lightbox-open {
+            overflow: hidden;
+        }
 
         /* ── PAGE / VIEW CHANGE ── */
         @keyframes fadeInUp {
@@ -1080,7 +1136,7 @@
 
         <div class="group">
             <p class="group-label">Embedded Software</p>
-            <p style="font-size:0.9rem;color:var(--mid);line-height:1.8;">Working on embedded systems for the humanoid team.</p>
+            <p style="font-size:0.9rem;color:var(--mid);line-height:1.8;">Working on tactile sensors for the humanoid team.</p>
         </div>
 
     </div>
@@ -1170,6 +1226,12 @@
 
 </div>
 </div><!-- /panel-me -->
+
+<!-- ══════════════════════════ LIGHTBOX ══════════════════════════ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">✕</button>
+    <img id="lightbox-img" src="" alt="">
+</div>
 
 <script>
     // Re-trigger the fade-up animation on an element (reflow resets it).
@@ -1265,6 +1327,53 @@
 
     window.addEventListener('hashchange', applyRoute);
     applyRoute();
+
+    /* ── Lightbox ── */
+    // One reusable overlay for every .img-slot image, current and future.
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxClose = document.getElementById('lightbox-close');
+    let lightboxReturnFocus = null;
+
+    function openLightbox(img) {
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt || '';
+        lightboxReturnFocus = document.activeElement;
+        lightbox.classList.add('open');
+        document.body.classList.add('lightbox-open');
+        lightboxClose.focus();
+    }
+
+    function closeLightbox() {
+        lightbox.classList.remove('open');
+        document.body.classList.remove('lightbox-open');
+        if (lightboxReturnFocus && lightboxReturnFocus.focus) lightboxReturnFocus.focus();
+        lightboxReturnFocus = null;
+        // Clear src after the fade so the old image doesn't flash on next open
+        lightbox.addEventListener('transitionend', () => {
+            if (!lightbox.classList.contains('open')) lightboxImg.src = '';
+        }, { once: true });
+    }
+
+    document.addEventListener('click', (e) => {
+        const slotImg = e.target.closest('.img-slot img');
+        if (slotImg) openLightbox(slotImg);
+    });
+
+    lightbox.addEventListener('click', (e) => {
+        // Close on backdrop or X — anywhere except the image itself
+        if (e.target !== lightboxImg) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('open')) return;
+        if (e.key === 'Escape') closeLightbox();
+        // The close button is the dialog's only focusable element — keep focus on it
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            lightboxClose.focus();
+        }
+    });
 </script>
 
 </body>
