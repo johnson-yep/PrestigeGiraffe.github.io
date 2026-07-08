@@ -843,6 +843,30 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Tonearm overlay: shares the vinyl's 0–100 coordinate space but lives
+           in its own SVG so the record's spin never touches it. Sits above the
+           vinyl, below the play button; pointer-events off so the button keeps
+           its full hit area. */
+        .tonearm-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            pointer-events: none;
+        }
+
+        /* Authored geometry is the DOWN (needle-on-record) pose; the default
+           rotate() lifts the whole arm UP and clear of the disc. JS drives the
+           actual rotation via an inline transform so rapid toggles can queue
+           instead of reversing mid-swing (see the Guitar song players IIFE). */
+        .tonearm {
+            transform-box: view-box;
+            transform-origin: 83px 17px;
+            transform: rotate(30deg);
+            transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
         /* the accent label doubles as the play/pause button; the hit area
            is a full 44px even though the visible label is smaller */
         .song-toggle {
@@ -1359,6 +1383,8 @@
             /* near-zero duration makes an infinite pulse flicker — stop it instead */
             .status-dot { animation: none !important; }
             .song-entry .vinyl { animation: none !important; }
+            /* tonearm snaps to its up/down pose instead of swinging */
+            .song-entry .tonearm { transition: none !important; }
         }
 
         /* ── RESPONSIVE ── */
@@ -1992,9 +2018,65 @@
         <p class="panel-sub"><span>Humanoid</span><span class="panel-date">May 2026–Present</span></p>
 
         <div class="group">
-            <p class="group-label">Embedded Software</p>
-            <p style="font-size:0.9rem;color:var(--mid);line-height:1.8;">Working on tactile sensors for the humanoid team.</p>
-        </div>
+            <!-- SIM-TO-REAL RL ARM -->
+            <div class="project" id="rl-arm">
+                <h2 class="project-title">Sim-to-Real Reinforcement Learning Arm</h2>
+                <div class="stack">
+                    <span class="tag">Python</span>
+                    <span class="tag">NVIDIA Isaac Lab</span>
+                    <span class="tag">Reinforcement Learning</span>
+                    <span class="tag">Reward Shaping</span>
+                    <span class="tag">Curriculum Learning</span>
+                    <span class="tag">ONNX</span>
+                    <span class="tag">Sim-to-Real</span>
+                </div>
+
+                <div class="btn-row">
+                    <a href="https://github.com/WATonomous/humanoid/tree/main/autonomy/simulation/Humanoid_Wato/HumanoidRL/HumanoidRLPackage/HumanoidRLSetup/tasks/push" class="video-btn" target="_blank">
+                        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                        View Code
+                    </a>
+                    <a href="https://youtu.be/4_NPltzaN6Y" class="video-btn" target="_blank">
+                        <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="1,0.5 9.5,5 1,9.5"/></svg>
+                        Side View
+                    </a>
+                    <a href="https://youtu.be/TU9OxlHozC0" class="video-btn" target="_blank">
+                        <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="1,0.5 9.5,5 1,9.5"/></svg>
+                        Front View
+                    </a>
+                </div>
+
+                <div class="img-grid cols-2">
+                    <div>
+                        <div class="img-slot" style="aspect-ratio: 16/9;">
+                            <img src="Images/Isaac_Lab_Training_Scene.png" alt="Isaac Lab training scene" style="height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="img-caption">Isaac Lab training scene</p>
+                    </div>
+                    <div>
+                        <div class="img-slot" style="aspect-ratio: 16/9;">
+                            <img src="Images/push_block_success_rate.png" alt="Curriculum success rate" style="height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="img-caption">Curriculum success rate</p>
+                    </div>
+                </div>
+
+                <div class="whi">
+                    <div class="whi-block">
+                        <p class="whi-label">What</p>
+                        <p class="whi-text">Trained a reinforcement-learning policy in NVIDIA Isaac Lab for a SO-ARM101 robotic arm to push a block up a ramp and into an elevated container using contact only — the gripper was locked closed so the policy could never grip or lift, forcing it to solve the task through pushing dynamics alone. The project was built for eventual transfer to the physical SO-101 arm.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">How</p>
+                        <p class="whi-text">Designed reward shaping to encourage correct approach positioning and reward progress up the ramp, while penalizing any attempt to lift the block. Used a performance-gated curriculum that progressively widened the block's spawn randomization — starting from a fixed position and expanding toward full-table placement — advancing to the next stage only once the policy hit a target success rate. This produced a policy that generalizes across varied starting positions rather than overfitting to one spawn point.</p>
+                    </div>
+                    <div class="whi-block">
+                        <p class="whi-label">Impact</p>
+                        <p class="whi-text">The resulting policy reliably completes the push task from varied starting positions and was exported to ONNX for sim-to-real deployment on the physical SO-101 arm. Demonstrated end-to-end RL workflow — environment design, reward engineering, curriculum design, and deployment export — for a contact-rich manipulation task.</p>
+                    </div>
+                </div>
+            </div><!-- /project -->
+        </div><!-- /group -->
 
     </div>
     </div><!-- /cat-watonomous -->
@@ -2021,7 +2103,7 @@
         </div>
         <p style="font-size:0.8rem; margin-top:0.5rem;"><button class="email-copy" type="button" aria-label="Copy email address">jyep@uwaterloo.ca</button></p>
         <div class="id-links">
-            <a class="id-link" href="https://github.com/PrestigeGiraffe" target="_blank" rel="noopener">
+            <a class="id-link" href="https://github.com/johnson-yep" target="_blank" rel="noopener">
                 <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
                 GitHub
             </a>
@@ -2072,6 +2154,28 @@
                                 <circle cx="50" cy="50" r="17" fill="var(--accent)"/>
                                 <circle cx="50" cy="50" r="2.6" fill="#1d1814"/>
                             </svg>
+                            <!-- Tonearm: authored in the DOWN (needle-on-groove)
+                                 pose; CSS parks it up, JS swings it. Duplicate
+                                 this block verbatim for any new .song-entry. -->
+                            <svg class="tonearm-svg" viewBox="0 0 100 100" aria-hidden="true">
+                                <g class="tonearm">
+                                    <!-- counterweight stub + weight, behind the pivot -->
+                                    <line x1="83" y1="17" x2="90.5" y2="8.5" stroke="var(--mid)" stroke-width="2.4" stroke-linecap="round"/>
+                                    <circle cx="91.5" cy="7.5" r="4.2" fill="var(--dim)"/>
+                                    <circle cx="91.5" cy="7.5" r="4.2" fill="none" stroke="var(--border2)" stroke-width="1"/>
+                                    <!-- main arm tube -->
+                                    <line x1="83" y1="17" x2="75" y2="27" stroke="var(--mid)" stroke-width="2.4" stroke-linecap="round"/>
+                                    <!-- headshell: mid-metal casing over a near-black cartridge
+                                         core (matches the record body) so it reads on the disc -->
+                                    <line x1="77" y1="24.5" x2="72.5" y2="30" stroke="var(--mid)" stroke-width="5" stroke-linecap="round"/>
+                                    <line x1="76.5" y1="25" x2="73" y2="29.5" stroke="#1d1814" stroke-width="2.6" stroke-linecap="round"/>
+                                    <!-- stylus resting on the outer groove -->
+                                    <line x1="73" y1="29.5" x2="73.5" y2="31.5" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round"/>
+                                    <!-- pivot mount, drawn last so the tubes tuck under it -->
+                                    <circle cx="83" cy="17" r="6" fill="var(--border2)"/>
+                                    <circle cx="83" cy="17" r="3.2" fill="var(--mid)"/>
+                                </g>
+                            </svg>
                             <button class="song-toggle" type="button">
                                 <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.5 5.5v13l10.5-6.5z"/></svg>
                                 <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.5 5.5h3.3v13H7.5zM13.2 5.5h3.3v13h-3.3z"/></svg>
@@ -2095,6 +2199,28 @@
                                 <circle cx="50" cy="50" r="17" fill="var(--accent)"/>
                                 <circle cx="50" cy="50" r="2.6" fill="#1d1814"/>
                             </svg>
+                            <!-- Tonearm: authored in the DOWN (needle-on-groove)
+                                 pose; CSS parks it up, JS swings it. Duplicate
+                                 this block verbatim for any new .song-entry. -->
+                            <svg class="tonearm-svg" viewBox="0 0 100 100" aria-hidden="true">
+                                <g class="tonearm">
+                                    <!-- counterweight stub + weight, behind the pivot -->
+                                    <line x1="83" y1="17" x2="90.5" y2="8.5" stroke="var(--mid)" stroke-width="2.4" stroke-linecap="round"/>
+                                    <circle cx="91.5" cy="7.5" r="4.2" fill="var(--dim)"/>
+                                    <circle cx="91.5" cy="7.5" r="4.2" fill="none" stroke="var(--border2)" stroke-width="1"/>
+                                    <!-- main arm tube -->
+                                    <line x1="83" y1="17" x2="75" y2="27" stroke="var(--mid)" stroke-width="2.4" stroke-linecap="round"/>
+                                    <!-- headshell: mid-metal casing over a near-black cartridge
+                                         core (matches the record body) so it reads on the disc -->
+                                    <line x1="77" y1="24.5" x2="72.5" y2="30" stroke="var(--mid)" stroke-width="5" stroke-linecap="round"/>
+                                    <line x1="76.5" y1="25" x2="73" y2="29.5" stroke="#1d1814" stroke-width="2.6" stroke-linecap="round"/>
+                                    <!-- stylus resting on the outer groove -->
+                                    <line x1="73" y1="29.5" x2="73.5" y2="31.5" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round"/>
+                                    <!-- pivot mount, drawn last so the tubes tuck under it -->
+                                    <circle cx="83" cy="17" r="6" fill="var(--border2)"/>
+                                    <circle cx="83" cy="17" r="3.2" fill="var(--mid)"/>
+                                </g>
+                            </svg>
                             <button class="song-toggle" type="button">
                                 <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.5 5.5v13l10.5-6.5z"/></svg>
                                 <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.5 5.5h3.3v13H7.5zM13.2 5.5h3.3v13h-3.3z"/></svg>
@@ -2110,8 +2236,7 @@
                 </div>
             </div>
             <div class="me-interest-card card-wide">
-                <p class="card-hint">Powerlifting</p>
-                <p class="card-static">I recently got into the sport and I plan to compete soon.</p>
+                <p class="card-hint">Lifting</p>
                 <ul class="pl-lifts">
                     <li class="pl-lift" data-weight="385">
                         <span class="pl-name">Squat</span>
@@ -2513,6 +2638,17 @@
     (function () {
         const players = [];
 
+        // HTML audio volume maxes out at 1.0, so a slight boost above that
+        // needs a Web Audio gain node. Shared context, created lazily on the
+        // first play (a user gesture, which satisfies autoplay policies).
+        const GAIN = 1.4; // slightly louder than unity
+        let audioCtx = null;
+        function ensureCtx() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
         document.querySelectorAll('.song-entry').forEach(entry => {
             const { title, artist, status, audio: src } = entry.dataset;
             entry.querySelector('.song-title').textContent = title;
@@ -2524,10 +2660,62 @@
             audio.preload = 'none';
             audio.src = src;
 
+            // Route through a gain node for the volume boost. Wired once, on
+            // first play; if Web Audio is unavailable it falls back to the
+            // element's own (unity-volume) output.
+            let wired = false;
+            function boost() {
+                if (wired) { ensureCtx(); return; }
+                try {
+                    const ctx = ensureCtx();
+                    const gain = ctx.createGain();
+                    gain.gain.value = GAIN;
+                    ctx.createMediaElementSource(audio).connect(gain).connect(ctx.destination);
+                    wired = true;
+                } catch (e) { /* no Web Audio — plain output at unity volume */ }
+            }
+
             function syncBtn() {
                 const playing = entry.classList.contains('playing');
                 btn.setAttribute('aria-label', (playing ? 'Pause ' : 'Play ') + title + ' by ' + artist);
             }
+
+            // ── Tonearm swing ──
+            // .playing stays the single source of truth for state; the arm's
+            // rotation is applied here as an inline transform so a toggle made
+            // mid-swing queues the latest target rather than reversing in
+            // flight. The audio itself still responds instantly (below).
+            const arm = entry.querySelector('.tonearm');
+            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+            const POSE = { down: 'rotate(0deg)', up: 'rotate(30deg)' };
+            let armDown = false;    // current applied pose (up on load)
+            let swinging = false;   // a swing transition is in flight
+            let queued = null;      // latest requested pose while swinging
+
+            function moveArm(down) {
+                armDown = down;
+                arm.style.transform = down ? POSE.down : POSE.up;
+            }
+            function requestArm(down) {
+                // Reduced motion: snap, never wait on a (suppressed) transition.
+                if (reduce.matches) { swinging = false; queued = null; moveArm(down); return; }
+                if (swinging) { queued = down; return; }  // finish current swing first
+                if (down === armDown) return;
+                swinging = true;
+                moveArm(down);
+            }
+            arm.addEventListener('transitionend', e => {
+                if (e.propertyName !== 'transform') return;
+                swinging = false;
+                if (queued !== null && queued !== armDown) {
+                    const next = queued;
+                    queued = null;
+                    swinging = true;
+                    moveArm(next);
+                } else {
+                    queued = null;
+                }
+            });
 
             function disable() {
                 audio.pause();
@@ -2535,8 +2723,8 @@
                 entry.classList.add('no-audio');
             }
 
-            audio.addEventListener('play',  () => { entry.classList.add('playing'); syncBtn(); });
-            audio.addEventListener('pause', () => { entry.classList.remove('playing'); syncBtn(); });
+            audio.addEventListener('play',  () => { entry.classList.add('playing'); syncBtn(); requestArm(true); });
+            audio.addEventListener('pause', () => { entry.classList.remove('playing'); syncBtn(); requestArm(false); });
             audio.addEventListener('ended', () => { audio.currentTime = 0; });
             audio.addEventListener('error', disable);
 
@@ -2550,6 +2738,7 @@
                     return;
                 }
                 players.forEach(p => { if (p !== player) p.stop(); });
+                boost();
                 audio.play().catch(err => {
                     // AbortError just means a rapid pause cancelled this play;
                     // anything else means the clip is missing or unplayable.
