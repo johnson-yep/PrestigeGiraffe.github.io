@@ -476,49 +476,6 @@
             gap: 0.6rem;
         }
 
-        /* ── STATUS PILL ── */
-        .status-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            background: var(--surface);
-            border: 1px solid var(--border2);
-            border-radius: 999px;
-            padding: 0.3rem 0.8rem;
-            margin-bottom: 1.5rem;
-            font-family: inherit;
-            cursor: pointer;
-            transition: border-color 0.15s, background 0.15s, transform 0.12s ease;
-        }
-
-        .status-pill:hover {
-            border-color: var(--accent);
-            background: var(--surface-hover);
-        }
-
-        .status-pill:active { transform: scale(0.96); }
-
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--ok);
-            flex-shrink: 0;
-            display: inline-block;
-            animation: statusBreathe 2.8s ease-in-out infinite;
-        }
-
-        .status-text {
-            font-size: 0.72rem;
-            color: var(--mid);
-            letter-spacing: 0.2px;
-        }
-
-        @keyframes statusBreathe {
-            0%, 100% { opacity: 1; }
-            50%      { opacity: 0.45; }
-        }
-
         /* ── ME PANEL ── */
         .me-wrap {
             max-width: 640px;
@@ -616,12 +573,6 @@
             color: var(--mid);
             line-height: 1.8;
             font-style: italic;
-        }
-
-        .me-interests {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.75rem;
         }
 
         .me-interest-card {
@@ -1090,7 +1041,7 @@
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 2rem 1.75rem;
+            padding: 1.75rem; /* uniform, so the logo sits evenly on all sides */
             text-align: left;
             cursor: pointer;
             transition: border-color 0.15s, background 0.15s, transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -1150,8 +1101,8 @@
         }
 
         .cat-btn-logo {
-            width: 52px;
-            height: 52px;
+            width: 104px;
+            height: 104px;
             border-radius: 10px;
             background: var(--logo-chip);
             border: 1px solid var(--border);
@@ -1369,6 +1320,216 @@
             overflow: hidden;
         }
 
+        /* ── THE LAB (3D playground, #playground) ── */
+        .lab-door {
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .lab-door-link {
+            background: none;
+            border: none;
+            padding: 0.4rem 0.6rem;
+            font-family: inherit;
+            font-size: 0.72rem;
+            letter-spacing: 0.4px;
+            color: var(--dim);
+            cursor: pointer;
+            transition: color 0.15s;
+        }
+
+        .lab-door-link:hover { color: var(--accent); }
+
+        .playground {
+            position: fixed;
+            inset: 0;
+            z-index: 150; /* above the sticky nav (100), below the lightbox (200) */
+            background: var(--bg);
+            display: none;
+        }
+
+        .playground.open { display: block; }
+
+        .playground canvas {
+            position: absolute;
+            inset: 0;
+            touch-action: none; /* one-finger drag orbits — it must not pan the page */
+        }
+
+        body.playground-open { overflow: hidden; }
+
+        .playground-status {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 0 2.5rem;
+            text-align: center;
+            color: var(--dim);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            pointer-events: none;
+        }
+
+        .playground-status[hidden] { display: none; }
+
+        .playground-spinner {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border2);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: lab-spin 0.8s linear infinite;
+        }
+
+        @keyframes lab-spin { to { transform: rotate(360deg); } }
+
+        .playground-label {
+            position: absolute;
+            transform: translate(-50%, -100%);
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            border-radius: 999px;
+            padding: 0.32rem 0.8rem;
+            font-size: 0.74rem;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            color: var(--text);
+            white-space: nowrap;
+            pointer-events: none;
+            box-shadow: 0 4px 16px var(--shadow-mid);
+            opacity: 0;
+            transition: opacity 0.12s ease;
+        }
+
+        .playground-label.show { opacity: 1; }
+
+        /* ── Interest card panel inside The Lab ── */
+        .playground-card {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: min(420px, calc(100vw - 3rem));
+            max-height: min(78vh, 640px);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            z-index: 5;
+            animation: fadeInUp 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
+        .playground-card[hidden] { display: none; }
+
+        .playground-card-close {
+            position: sticky;
+            top: 0;
+            align-self: flex-end;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.95rem;
+            line-height: 1;
+            cursor: pointer;
+            z-index: 2;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .playground-card-close:hover {
+            border-color: var(--mid);
+            background: var(--border);
+        }
+
+        /* one card at a time; the panel is narrow, so stack the record players */
+        .playground-card .me-interest-card { display: none; }
+        .playground-card .me-interest-card.pc-active { display: flex; }
+        .playground-card .song-entries { grid-template-columns: 1fr; }
+
+        /* first-person HUD */
+        .playground-hint {
+            position: absolute;
+            top: 1.25rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 6;
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            border-radius: 10px;
+            padding: 0.55rem 1rem;
+            font-size: 0.76rem;
+            line-height: 1.5;
+            color: var(--mid);
+            text-align: center;
+            max-width: calc(100vw - 2rem);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .playground-hint.show { opacity: 1; }
+
+        .playground-prompt {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 6;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text);
+            border: 1px solid var(--border2);
+            border-radius: 10px;
+            padding: 0.65rem 1.1rem;
+            background: var(--surface);
+            font-family: inherit;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            box-shadow: 0 4px 16px var(--shadow-mid);
+            transition: color 0.15s, border-color 0.15s, background 0.15s;
+        }
+
+        .playground-prompt:hover {
+            border-color: var(--accent);
+            background: var(--surface-hover);
+        }
+
+        .playground-prompt[hidden] { display: none; }
+
+        .playground-prompt-key {
+            border: 1px solid var(--border2);
+            border-radius: 5px;
+            padding: 0 0.4rem;
+            font-size: 0.72rem;
+            color: var(--dim);
+        }
+
+        @media (max-width: 640px) {
+            /* bottom sheet on phones */
+            .playground-card {
+                right: 1rem;
+                left: 1rem;
+                top: auto;
+                bottom: 5.5rem; /* clear the Back button */
+                transform: none;
+                width: auto;
+                max-height: 55vh;
+            }
+        }
+
         /* ── PAGE / VIEW CHANGE ── */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(8px); }
@@ -1380,11 +1541,12 @@
         /* Respect users who prefer less motion */
         @media (prefers-reduced-motion: reduce) {
             * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
-            /* near-zero duration makes an infinite pulse flicker — stop it instead */
-            .status-dot { animation: none !important; }
+            /* near-zero duration makes an infinite spin flicker — stop it instead */
             .song-entry .vinyl { animation: none !important; }
             /* tonearm snaps to its up/down pose instead of swinging */
             .song-entry .tonearm { transition: none !important; }
+            /* near-zero duration would make the spinner flicker — freeze it */
+            .playground-spinner { animation: none !important; }
         }
 
         /* ── RESPONSIVE ── */
@@ -1396,7 +1558,6 @@
             .projects-wrap, .me-wrap, .cat-hub-wrap { padding: 3rem 1.25rem 5rem; }
             .img-grid.cols-2 { grid-template-columns: 1fr; }
             .img-grid.cols-3 { grid-template-columns: 1fr 1fr; }
-            .me-interests { grid-template-columns: 1fr; }
             .song-entries { grid-template-columns: 1fr; }
         }
     </style>
@@ -1431,11 +1592,62 @@
 
     <!-- ── CATEGORY HUB ── -->
     <div id="cat-hub" class="cat-hub-wrap">
-        <button class="status-pill" type="button" onclick="navigate('me')">
-            <span class="status-dot"></span>
-            <span class="status-text">Seeking Fall 2026 internship</span>
-        </button>
         <p class="panel-heading">Work &amp; Projects</p>
+
+        <div class="cat-grid">
+            <div class="cat-section">
+                <p class="cat-section-label">Internships</p>
+                <button class="cat-btn" onclick="navigate('toyota')">
+                    <div class="cat-btn-logo">
+                        <img src="Images/Toyota Boshoku Logo.png" alt="Toyota Boshoku">
+                    </div>
+                    <div style="flex:1;">
+                        <p class="cat-btn-title">Toyota Boshoku</p>
+                        <p class="cat-btn-sub"><span>Co-op</span></p>
+                        <p class="cat-btn-date">Jan–May 2026</p>
+                    </div>
+                    <span class="cat-btn-arrow">→</span>
+                </button>
+            </div>
+            <div class="cat-section">
+                <p class="cat-section-label">Design Teams</p>
+                <button class="cat-btn" onclick="navigate('watonomous')">
+                    <div class="cat-btn-logo">
+                        <img src="Images/Watonomous Logo.jpg" alt="Watonomous">
+                    </div>
+                    <div style="flex:1;">
+                        <p class="cat-btn-title">Watonomous</p>
+                        <p class="cat-btn-sub">Humanoid</p>
+                        <p class="cat-btn-date">May 2026–Present</p>
+                    </div>
+                    <span class="cat-btn-arrow">→</span>
+                </button>
+                <button class="cat-btn" onclick="navigate('uwfe')">
+                    <div class="cat-btn-logo">
+                        <img src="Images/UWFE Logo.jpg" alt="UWFE">
+                    </div>
+                    <div style="flex:1;">
+                        <p class="cat-btn-title">uWaterloo Formula Electric</p>
+                        <p class="cat-btn-sub">Driveline</p>
+                        <p class="cat-btn-date">Sep 2025–Mar 2026</p>
+                    </div>
+                    <span class="cat-btn-arrow">→</span>
+                </button>
+            </div>
+            <div class="cat-section">
+                <p class="cat-section-label">Personal Projects</p>
+                <button class="cat-btn" onclick="navigate('personal')">
+                    <div class="cat-btn-logo">
+                        <img src="Images/Personal Projects Logo.png" alt="Personal Projects">
+                    </div>
+                    <div style="flex:1;">
+                        <p class="cat-btn-title">Personal Projects</p>
+                        <p class="cat-btn-sub">Side projects, experiments, and builds</p>
+                    </div>
+                    <span class="cat-btn-arrow">→</span>
+                </button>
+            </div>
+        </div>
 
         <!-- ── TECHNICAL SKILLS ── -->
         <div class="skills-section">
@@ -1536,61 +1748,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="cat-grid">
-            <div class="cat-section">
-                <p class="cat-section-label">Internships</p>
-                <button class="cat-btn" onclick="navigate('toyota')">
-                    <div class="cat-btn-logo">
-                        <img src="Images/Toyota Boshoku Logo.png" alt="Toyota Boshoku">
-                    </div>
-                    <div style="flex:1;">
-                        <p class="cat-btn-title">Toyota Boshoku</p>
-                        <p class="cat-btn-sub"><span>Co-op</span><span>Elmira, ON</span></p>
-                        <p class="cat-btn-date">Jan–May 2026</p>
-                    </div>
-                    <span class="cat-btn-arrow">→</span>
-                </button>
-            </div>
-            <div class="cat-section">
-                <p class="cat-section-label">Design Teams</p>
-                <button class="cat-btn" onclick="navigate('watonomous')">
-                    <div class="cat-btn-logo">
-                        <img src="Images/Watonomous Logo.jpg" alt="Watonomous">
-                    </div>
-                    <div style="flex:1;">
-                        <p class="cat-btn-title">Watonomous</p>
-                        <p class="cat-btn-sub">Humanoid</p>
-                        <p class="cat-btn-date">May 2026–Present</p>
-                    </div>
-                    <span class="cat-btn-arrow">→</span>
-                </button>
-                <button class="cat-btn" onclick="navigate('uwfe')">
-                    <div class="cat-btn-logo">
-                        <img src="Images/UWFE Logo.jpg" alt="UWFE">
-                    </div>
-                    <div style="flex:1;">
-                        <p class="cat-btn-title">uWaterloo Formula Electric</p>
-                        <p class="cat-btn-sub">Driveline</p>
-                        <p class="cat-btn-date">Sep 2025–Mar 2026</p>
-                    </div>
-                    <span class="cat-btn-arrow">→</span>
-                </button>
-            </div>
-            <div class="cat-section">
-                <p class="cat-section-label">Personal Projects</p>
-                <button class="cat-btn" onclick="navigate('personal')">
-                    <div class="cat-btn-logo">
-                        <img src="Images/Personal Projects Logo.png" alt="Personal Projects">
-                    </div>
-                    <div style="flex:1;">
-                        <p class="cat-btn-title">Personal Projects</p>
-                        <p class="cat-btn-sub">Side projects, experiments, and builds</p>
-                    </div>
-                    <span class="cat-btn-arrow">→</span>
-                </button>
-            </div>
-        </div>
     </div>
 
     <!-- ── TOYOTA DETAIL ── -->
@@ -1644,15 +1801,15 @@
                 <div class="whi">
                     <div class="whi-block">
                         <p class="whi-label">What</p>
-                        <p class="whi-text">A real-time computer vision system to automate rack detection and decision-making for autonomous mobile robots in Toyota Boshoku's manufacturing plant. The system processes a live RTSP camera feed, applies homography and distortion correction to generate a consistent bird's-eye view of the workspace, and uses HSV colour segmentation with configurable detection regions to determine rack occupancy.</p>
+                        <p class="whi-text">A real-time computer vision system that automates rack detection and decision-making for autonomous mobile robots in Toyota Boshoku's manufacturing plant. It takes a live RTSP camera feed, applies homography and distortion correction to get a consistent bird's-eye view of the workspace, then uses HSV colour segmentation with configurable detection regions to work out which racks are occupied.</p>
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">How</p>
-                        <p class="whi-text">The system integrates with Allen-Bradley PLCs over Ethernet/IP — detection results are converted into structured boolean arrays and sent directly to trigger AMR actions. I built an interactive calibration interface with live tuning for colour thresholds, detection sensitivity, and geometric transformations, with save/load functionality for fast redeployment. A multithreaded camera pipeline eliminates frame latency and maintains stable real-time operation in a production environment.</p>
+                        <p class="whi-text">Detection results are converted into structured boolean arrays and sent to Allen-Bradley PLCs over Ethernet/IP, where they directly trigger AMR actions. I built an interactive calibration interface with live tuning for colour thresholds, detection sensitivity, and geometric transformations, plus save/load so it can be redeployed quickly. A multithreaded camera pipeline eliminates frame latency and keeps the system stable running in production.</p>
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">Impact</p>
-                        <p class="whi-text">Replaced manual operator input with a fully automated system, allowing AMRs to make real-time decisions based on actual rack availability. The system reliably moved over 100 racks per day, reduced operator workload, and minimized production delays.</p>
+                        <p class="whi-text">Replaced manual operator input entirely: the AMRs now make real-time decisions based on actual rack availability. In production it reliably handled over 100 rack moves per day, which took that job off operators and cut the production delays that came with it.</p>
                     </div>
                 </div>
             </div><!-- /project -->
@@ -1696,15 +1853,15 @@
                 <div class="whi">
                     <div class="whi-block">
                         <p class="whi-label">What</p>
-                        <p class="whi-text">Human-machine interface displays for multiple machines and robotic systems across the production plant. Interfaces show real-time servo speed and torque data for sonic weld robots during clip installation, track total screws and clips installed, and allow operators to selectively bypass vision-based defect detection for specific screws when needed.</p>
+                        <p class="whi-text">Human-machine interface displays for multiple machines and robotic systems across the production plant. The screens show real-time servo speed and torque data for sonic weld robots during clip installation and track total screws and clips installed. Operators can also selectively bypass vision-based defect detection for specific screws.</p>
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">How</p>
-                        <p class="whi-text">Built using FactoryTalk View Studio and Studio 5000. Ladder logic captures and stores real-time production and diagnostic data in the Allen-Bradley PLC, communicated to the HMI through structured tags and arrays. Layouts were designed to ensure operators and maintenance staff can quickly interpret system status and act without needing to dig into raw PLC data.</p>
+                        <p class="whi-text">Built using FactoryTalk View Studio and Studio 5000. Ladder logic captures and stores real-time production and diagnostic data in the Allen-Bradley PLC, and structured tags and arrays carry it to the HMI. I laid out the screens so operators and maintenance staff can read system status at a glance instead of digging into raw PLC data.</p>
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">Impact</p>
-                        <p class="whi-text">Improved visibility into robot performance, enabling faster fault diagnosis and better maintenance scheduling. Tool usage tracking allowed proactive part replacement before failures, reducing unexpected downtime. Operator-controlled bypasses reduced unnecessary production stoppages without compromising quality control.</p>
+                        <p class="whi-text">Better visibility into robot performance made faults faster to diagnose and maintenance easier to schedule. Tracking tool usage means worn parts get swapped before they fail rather than after, cutting unexpected downtime. The operator bypasses removed unnecessary production stoppages while keeping quality checks intact.</p>
                     </div>
                 </div>
             </div><!-- /project -->
@@ -1762,7 +1919,7 @@
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">Impact</p>
-                        <p class="whi-text">Team members could drill holes accurately and repeatably without manual measurement each time, improving manufacturing consistency and reducing setup time.</p>
+                        <p class="whi-text">Team members could drill accurately without measuring by hand each time, so setup got faster and hole placement stayed consistent across parts.</p>
                     </div>
                 </div>
             </div><!-- /project -->
@@ -1810,7 +1967,7 @@
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">Impact</p>
-                        <p class="whi-text">Standardized hole alignment across driveline machining operations, enabling team members to work faster and with greater accuracy.</p>
+                        <p class="whi-text">Standardized hole alignment across driveline machining operations, so team members could work faster and more accurately.</p>
                     </div>
                 </div>
             </div><!-- /project -->
@@ -1856,7 +2013,7 @@
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">Impact</p>
-                        <p class="whi-text">The model served as a key component in completing the cooling system design, allowing the team to verify spatial packaging and fitment in the full driveline assembly before fabrication.</p>
+                        <p class="whi-text">The team used the model to verify spatial packaging and fitment in the full driveline assembly before fabrication, which closed out one of the missing pieces of the cooling system design.</p>
                     </div>
                 </div>
             </div><!-- /project -->
@@ -1901,15 +2058,15 @@
                 <div class="whi">
                     <div class="whi-block">
                         <p class="whi-label">What</p>
-                        <p class="whi-text">A real-time computer vision guitar interaction system using a webcam feed to detect hand and finger movements and translate them into musical input. The left hand selects chords based on finger positions; the right hand triggers individual notes. Visual overlays display chord diagrams and fingertip indicators in the live feed.</p>
+                        <p class="whi-text">A guitar you play in the air: computer vision reads hand and finger movements from a webcam feed and turns them into musical input, in real time. The left hand selects chords based on finger positions; the right hand triggers individual notes. Visual overlays display chord diagrams and fingertip indicators in the live feed.</p>
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">How</p>
-                        <p class="whi-text">Built custom hand-tracking logic on top of MediaPipe, interpreting finger states by comparing landmark positions to determine which fingers are raised or pressed. Detected gestures map to chord and note audio files via Pygame. An event-based playback system only fires on new finger presses — preventing repeated audio from a held position. Optimized frame processing to maintain sub-frame latency from a live camera feed.</p>
+                        <p class="whi-text">Built custom hand-tracking logic on top of MediaPipe, interpreting finger states by comparing landmark positions to determine which fingers are raised or pressed. Detected gestures map to chord and note audio files via Pygame. An event-based playback system only fires on new finger presses, so holding a position doesn't retrigger the same audio. Optimized frame processing to maintain sub-frame latency from a live camera feed.</p>
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">Impact</p>
-                        <p class="whi-text">This project was the entry point into real-time computer vision — showing that a standard webcam could drive a low-latency interactive system with meaningful accuracy. The core ideas around frame processing, gesture mapping, and real-time performance directly informed the approach taken on the AMR CV system at Toyota Boshoku.</p>
+                        <p class="whi-text">This was my entry point into real-time computer vision, and it convinced me a standard webcam could drive a low-latency interactive system accurately. What I learned here about frame processing, gesture mapping, and keeping everything real-time fed directly into the AMR CV system at Toyota Boshoku.</p>
                     </div>
                 </div>
             </div><!-- /project -->
@@ -1954,15 +2111,15 @@
                 <div class="whi">
                     <div class="whi-block">
                         <p class="whi-label">What</p>
-                        <p class="whi-text">An autonomous checkers-playing robot built to compete against a human player. The system scans the board with optical and distance sensors, identifies piece locations, determines a legal move, and physically executes it using a motorized claw and X-Y gantry mechanism — all under strict hardware and size constraints.</p>
+                        <p class="whi-text">An autonomous checkers-playing robot built to compete against a human player. It scans the board with optical and distance sensors, identifies piece locations, determines a legal move, and physically executes it with a motorized claw on an X-Y gantry. All of this had to fit within strict hardware and size constraints.</p>
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">How</p>
-                        <p class="whi-text">C++ firmware represents the board as a 2D array, handling piece detection, legal move generation, promotion logic, and game-over detection. The X-Y motion system positions the claw over target squares and the claw mechanism picks and places pieces. Multiple prototype iterations improved chassis stability, reduced jamming, refined claw and sensor alignment, and adjusted the checkers pieces themselves for more reliable detection.</p>
+                        <p class="whi-text">C++ firmware represents the board as a 2D array, handling piece detection, legal move generation, promotion logic, and game-over detection. The X-Y motion system positions the claw over target squares and the claw mechanism picks and places pieces. It took several prototypes to get right: stiffening the chassis, fixing jams, re-aligning the claw and sensors, and eventually modifying the checkers pieces themselves so they'd detect reliably.</p>
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">Impact</p>
-                        <p class="whi-text">The final robot reliably played a complete game of checkers — scanning the board, selecting legal moves, and executing them. Demonstrated end-to-end integration of mechanical design, sensors, and embedded software. Strengthened skills in prototyping iteration, debugging under physical constraints, and full-system mechatronic design.</p>
+                        <p class="whi-text">The final robot reliably played complete games of checkers against a human. Everything had to work together: the mechanical design, the sensors, and the embedded software. More than anything it taught me how to iterate on a prototype and debug problems that could live anywhere between the hardware and the code.</p>
                     </div>
                 </div>
             </div><!-- /project -->
@@ -1997,11 +2154,11 @@
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">How</p>
-                        <p class="whi-text">Object-oriented architecture with separate classes for each entity type — spaceship, aliens, asteroids, projectiles, health bar, and stat tracker. Real-time gameplay is driven by a JavaFX AnimationTimer loop handling movement, spawning, collision detection, and scoring. Smooth held-key movement uses a key-state map instead of single key events. Directional projectile motion is calculated from normalized velocity components toward mouse-click targets; enemy shots track the player. Stats persist between sessions via file I/O.</p>
+                        <p class="whi-text">Object-oriented architecture with separate classes for each entity type: spaceship, aliens, asteroids, projectiles, health bar, and stat tracker. Real-time gameplay is driven by a JavaFX AnimationTimer loop handling movement, spawning, collision detection, and scoring. Smooth held-key movement uses a key-state map instead of single key events. Directional projectile motion is calculated from normalized velocity components toward mouse-click targets; enemy shots track the player. Stats persist between sessions via file I/O.</p>
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">Impact</p>
-                        <p class="whi-text">Built and shipped a complete, playable application end-to-end — from architecture to gameplay loop to persistent state. Developed a solid feel for managing multiple interacting real-time systems and clean OOP design under a tight game loop.</p>
+                        <p class="whi-text">Built and shipped a complete, playable game, from the architecture through the gameplay loop to persistent state. It gave me a real feel for managing several interacting real-time systems and for keeping OOP design clean inside a tight game loop.</p>
                     </div>
                 </div>
             </div><!-- /project -->
@@ -2064,15 +2221,15 @@
                 <div class="whi">
                     <div class="whi-block">
                         <p class="whi-label">What</p>
-                        <p class="whi-text">Trained a reinforcement-learning policy in NVIDIA Isaac Lab for a SO-ARM101 robotic arm to push a block up a ramp and into an elevated container using contact only — the gripper was locked closed so the policy could never grip or lift, forcing it to solve the task through pushing dynamics alone. The project was built for eventual transfer to the physical SO-101 arm.</p>
+                        <p class="whi-text">Trained a reinforcement-learning policy in NVIDIA Isaac Lab for a SO-ARM101 robotic arm to push a block up a ramp and into an elevated container using contact only. The gripper was locked closed, so the policy could never grip or lift and had to solve the task through pushing dynamics alone. The project was built for eventual transfer to the physical SO-101 arm.</p>
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">How</p>
-                        <p class="whi-text">Designed reward shaping to encourage correct approach positioning and reward progress up the ramp, while penalizing any attempt to lift the block. Used a performance-gated curriculum that progressively widened the block's spawn randomization — starting from a fixed position and expanding toward full-table placement — advancing to the next stage only once the policy hit a target success rate. This produced a policy that generalizes across varied starting positions rather than overfitting to one spawn point.</p>
+                        <p class="whi-text">Designed reward shaping to encourage correct approach positioning and reward progress up the ramp, while penalizing any attempt to lift the block. A performance-gated curriculum progressively widened the block's spawn randomization, from a fixed position out to full-table placement, and each stage only unlocked once the policy hit a target success rate. The result generalizes across varied starting positions instead of overfitting to one spawn point.</p>
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">Impact</p>
-                        <p class="whi-text">The resulting policy reliably completes the push task from varied starting positions and was exported to ONNX for sim-to-real deployment on the physical SO-101 arm. Demonstrated end-to-end RL workflow — environment design, reward engineering, curriculum design, and deployment export — for a contact-rich manipulation task.</p>
+                        <p class="whi-text">The policy reliably completes the push task from varied starting positions and was exported to ONNX for sim-to-real deployment on the physical SO-101 arm. I owned the whole RL workflow for a contact-rich manipulation task: environment design, reward engineering, curriculum design, and the deployment export.</p>
                     </div>
                 </div>
             </div><!-- /project -->
@@ -2089,10 +2246,6 @@
 
     <!-- Name block -->
     <div class="me-name-block">
-        <button class="status-pill" type="button" onclick="navigate('me')">
-            <span class="status-dot"></span>
-            <span class="status-text">Seeking Fall 2026 internship</span>
-        </button>
         <h1 class="me-name">Johnson Yep</h1>
         <div style="display:flex; align-items:center; gap:0.6rem; margin-top:0.75rem;">
             <!-- <img src="Images/UWaterloo Logo.png" alt="University of Waterloo" style="height:16px; opacity:0.6;"> -->
@@ -2120,15 +2273,48 @@
     <div class="me-section">
         <p class="me-section-label">About</p>
         <p class="me-blank-text">
-            I love building projects that integrate software and hardware to solve real-world problems. I'm always eager to learn new skills, take on challenges, and collaborate with others who share my enthusiasm for innovation.
+            I like building things where software has to meet hardware and actually work in the real world. Most of what I've picked up comes from taking on projects a bit past what I already knew how to do, and I'm always up for working with people who get excited about this stuff.
         </p>
     </div>
 
-    <!-- Interests -->
-    <div class="me-section">
-        <p class="me-section-label">Interests</p>
-        <div class="me-interests">
-            <div class="me-interest-card card-wide">
+    <!-- Quiet door to the 3D workshop — an easter egg, deliberately not a CTA -->
+    <p class="lab-door">
+        <button class="lab-door-link" type="button" onclick="navigate('playground')">psst — my interests live in the lab →</button>
+    </p>
+
+</div>
+</div><!-- /panel-me -->
+
+<!-- Screen reader announcement for the click-to-copy email -->
+<span id="email-live" class="sr-only" aria-live="polite"></span>
+
+<!-- ══════════════════════════ LIGHTBOX ══════════════════════════ -->
+<!-- ════════════════════════ THE LAB (#playground) ════════════════════════
+     Hidden 3D playground. Three.js is injected from CDN on first visit only —
+     nothing here loads with the page. -->
+<div class="playground" id="playground" role="region" aria-label="The Lab — interactive 3D workshop">
+    <p class="sr-only">This is an interactive 3D scene: drag to orbit, scroll or
+        pinch to zoom, and click an object to open the matching interest card
+        (guitar, lifting, or reading). Clicking the sleeping robot switches to a
+        first-person mode driven with WASD or touch, where cards open as you
+        approach each object; dock at the robot's charger to return. The 3D view
+        requires a mouse or touch input and is not keyboard-navigable — use the
+        Back button (or press Escape) to leave, and Escape also closes an open
+        card.</p>
+    <div class="playground-status" id="playground-status" hidden>
+        <div class="playground-spinner" aria-hidden="true"></div>
+        <p id="playground-status-text"></p>
+    </div>
+    <div class="playground-label" id="playground-label" aria-hidden="true"></div>
+    <!-- First-person HUD: controls hint (top) and the dock prompt (bottom centre) -->
+    <div class="playground-hint" id="playground-hint" aria-hidden="true"></div>
+    <button class="playground-prompt" id="playground-prompt" hidden>
+        ⚡ Dock &amp; power down <span class="playground-prompt-key">E</span>
+    </button>
+    <!-- Interest cards: shown one at a time after the camera flies to an object -->
+    <div class="playground-card" id="playground-card" hidden>
+        <button class="playground-card-close" id="playground-card-close" aria-label="Close interest card">✕</button>
+            <div class="me-interest-card card-wide" id="interest-guitar">
                 <p class="card-hint">Guitar</p>
                 <p class="card-static">Self-taught for about a year, mostly from YouTube and tabs.</p>
                 <!-- Currently learning: plain text only, no record player. -->
@@ -2235,7 +2421,7 @@
                     </div>
                 </div>
             </div>
-            <div class="me-interest-card card-wide">
+            <div class="me-interest-card card-wide" id="interest-lifting">
                 <p class="card-hint">Lifting</p>
                 <ul class="pl-lifts">
                     <li class="pl-lift" data-weight="385">
@@ -2283,7 +2469,7 @@
                  "Up Next"). Covers live outside .img-slot so the lightbox click
                  handler never matches them. Missing cover → onerror reveals the
                  .book-ph placeholder, so the 2/3 box keeps its shape. -->
-            <div class="me-interest-card card-wide">
+            <div class="me-interest-card card-wide" id="interest-reading">
                 <p class="card-hint">Reading</p>
                 <div class="bookshelf">
                     <div class="book">
@@ -2320,16 +2506,14 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 
+    <button class="back-btn" id="playground-exit">
+        <svg viewBox="0 0 10 10" fill="currentColor"><polygon points="9,0.5 0.5,5 9,9.5"/></svg>
+        Back
+    </button>
 </div>
-</div><!-- /panel-me -->
 
-<!-- Screen reader announcement for the click-to-copy email -->
-<span id="email-live" class="sr-only" aria-live="polite"></span>
-
-<!-- ══════════════════════════ LIGHTBOX ══════════════════════════ -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
     <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">✕</button>
     <img id="lightbox-img" src="" alt="">
@@ -2404,6 +2588,918 @@
         document.getElementById('global-back').style.display = 'inline-flex';
     }
 
+    /* ── The Lab: hidden 3D playground (#playground) ── */
+    // Three.js + OrbitControls come from a CDN, injected on first entry only —
+    // nothing 3D-related loads with the page. r128 is pinned deliberately:
+    // it's the last release that ships OrbitControls as a classic script
+    // (global THREE), which keeps this a simple two-tag load with no
+    // import-map plumbing.
+    const LAB_THREE_SRC = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
+    const LAB_ORBIT_SRC = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
+
+    const lab = document.getElementById('playground');
+    const labStatus = document.getElementById('playground-status');
+    const labStatusText = document.getElementById('playground-status-text');
+    const labSpinner = labStatus.querySelector('.playground-spinner');
+    const labLabel = document.getElementById('playground-label');
+    const labExit = document.getElementById('playground-exit');
+    const labCard = document.getElementById('playground-card');
+    const labCardClose = document.getElementById('playground-card-close');
+    const labHint = document.getElementById('playground-hint');
+    const labPrompt = document.getElementById('playground-prompt');
+
+    let labScripts = null;       // in-flight/settled CDN load, shared across visits
+    let labThreeReady = false;   // true once both CDN scripts have executed
+    let labGen = 0;              // bumped on every open/close; voids stale async work
+    let labActive = null;        // live scene state, null when closed
+    let labFocused = null;       // hovered (mouse) or selected (touch) object group
+    let labCardFor = null;       // object group whose interest card is open
+    let labReturnFocus = null;
+    let playgroundReturn = null; // route the lab's Back button returns to
+
+    // `silent` (first-person proximity pops) skips the focus grab so an open
+    // card never interrupts driving.
+    function labShowCard(group, silent) {
+        labCardFor = group;
+        labCard.querySelectorAll('.me-interest-card').forEach(el => {
+            el.classList.toggle('pc-active', el.id === group.userData.cardId);
+        });
+        labCard.hidden = false;
+        labCard.scrollTop = 0;
+        if (!silent) labCardClose.focus();
+    }
+
+    function labCloseCard() {
+        if (labCard.hidden) return;
+        labCard.hidden = true;
+        labCardFor = null;
+        if (window.stopSongPlayers) stopSongPlayers(); // don't leave a record spinning
+        const orbiting = labActive && labActive.mode === 'orbit';
+        if (orbiting && lab.classList.contains('open')) {
+            // glide back out to the default framing, then resume the idle drift.
+            // (If this close is part of switching cards, the switch's own flight
+            // immediately replaces this one, so there's no detour through home.)
+            labActive.flyHome(() => {
+                if (labActive && !labReducedMotion()) {
+                    clearTimeout(labActive.resumeTimer);
+                    labActive.resumeTimer = setTimeout(() => {
+                        if (labActive) labActive.controls.autoRotate = true;
+                    }, 1500);
+                }
+            });
+        }
+        // In first-person mode focus stays where it is — grabbing it would
+        // interrupt the movement keys.
+        if (orbiting && lab.classList.contains('open')) labExit.focus();
+    }
+    labCardClose.addEventListener('click', labCloseCard);
+
+    /* Lab sound effects — tiny synthesized cues, no audio files. The context
+       is created inside the click that wakes the robot (a user gesture), so
+       autoplay policy is satisfied; it's reused across visits. */
+    let labAudio = null;
+    function labAudioCtx() {
+        if (labAudio === null) {
+            try { labAudio = new (window.AudioContext || window.webkitAudioContext)(); }
+            catch (e) { labAudio = false; }
+        }
+        if (labAudio && labAudio.state === 'suspended') labAudio.resume();
+        return labAudio || null;
+    }
+
+    // Boot-up: a rising power sweep, then two chirpy "online" beeps timed
+    // with the eye blink cutscene.
+    function labBootSound() {
+        const ctx = labAudioCtx();
+        if (!ctx) return;
+        const t = ctx.currentTime;
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(120, t);
+        o.frequency.exponentialRampToValueAtTime(700, t + 0.65);
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.12, t + 0.1);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.7);
+        o.connect(g).connect(ctx.destination);
+        o.start(t);
+        o.stop(t + 0.75);
+        [[0.78, 880], [0.94, 1318]].forEach(([dt, f]) => {
+            const bo = ctx.createOscillator(), bg = ctx.createGain();
+            bo.type = 'sine';
+            bo.frequency.setValueAtTime(f, t + dt);
+            bg.gain.setValueAtTime(0.0001, t + dt);
+            bg.gain.exponentialRampToValueAtTime(0.09, t + dt + 0.02);
+            bg.gain.exponentialRampToValueAtTime(0.0001, t + dt + 0.12);
+            bo.connect(bg).connect(ctx.destination);
+            bo.start(t + dt);
+            bo.stop(t + dt + 0.15);
+        });
+    }
+
+    // Motor hum for first-person driving: two barely-detuned triangle waves
+    // through a dark lowpass — a soft, slowly beating purr rather than a buzz.
+    // Volume and pitch follow the movement input; created on FP entry, killed
+    // on dock or teardown.
+    function labStartDriveSfx() {
+        const ctx = labAudioCtx();
+        if (!ctx) return null;
+        const lp = ctx.createBiquadFilter();
+        lp.type = 'lowpass';
+        lp.frequency.value = 160;
+        const gain = ctx.createGain();
+        gain.gain.value = 0;
+        lp.connect(gain).connect(ctx.destination);
+        const oscs = [52, 53.2].map(f => {
+            const o = ctx.createOscillator();
+            o.type = 'triangle';
+            o.frequency.value = f;
+            o.connect(lp);
+            o.start();
+            return o;
+        });
+        return { ctx, oscs, gain };
+    }
+
+    function labKillDriveSfx(a) {
+        const sfx = a && a.driveSfx;
+        if (!sfx) return;
+        a.driveSfx = null;
+        try {
+            sfx.gain.gain.setTargetAtTime(0, sfx.ctx.currentTime, 0.05);
+            setTimeout(() => sfx.oscs.forEach(o => { try { o.stop(); } catch (e) {} }), 300);
+        } catch (e) {}
+    }
+
+    function labReducedMotion() {
+        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
+    function labLoadScript(src) {
+        return new Promise((resolve, reject) => {
+            const s = document.createElement('script');
+            s.src = src;
+            s.onload = resolve;
+            s.onerror = () => { s.remove(); reject(new Error('Failed to load ' + src)); };
+            document.head.appendChild(s);
+        });
+    }
+
+    function labShowStatus(msg, loading) {
+        labStatus.hidden = false;
+        labStatusText.textContent = msg;
+        labSpinner.style.display = loading ? '' : 'none';
+    }
+
+    function openPlayground() {
+        if (lab.classList.contains('open')) return;
+        const gen = ++labGen;
+        labReturnFocus = document.activeElement;
+        lab.classList.add('open');
+        document.body.classList.add('playground-open');
+        labExit.focus();
+
+        if (!labThreeReady) labShowStatus('Warming up the lab…', true);
+        if (!labScripts) {
+            // A failed attempt clears labScripts so the next visit retries
+            labScripts = labLoadScript(LAB_THREE_SRC)
+                .then(() => labLoadScript(LAB_ORBIT_SRC))
+                .then(() => { labThreeReady = true; })
+                .catch(err => { labScripts = null; throw err; });
+        }
+        labScripts.then(() => {
+            if (gen !== labGen) return; // user already left
+            labStatus.hidden = true;
+            labBuildScene(); // throws if WebGL is unavailable — caught below
+        }).catch(() => {
+            if (gen !== labGen) return;
+            labShowStatus('The lab couldn’t start — either the 3D library didn’t make it over the network, or this browser has 3D turned off. Drop by again some time!', false);
+        });
+    }
+
+    function closePlayground() {
+        if (!lab.classList.contains('open')) return;
+        labGen++;
+        lab.classList.remove('open');
+        document.body.classList.remove('playground-open');
+        labCloseCard();
+        labStatus.hidden = true;
+        labLabel.classList.remove('show');
+        labFocused = null;
+        labHint.classList.remove('show');
+        labPrompt.hidden = true;
+        labPrompt.onclick = null;
+        if (document.pointerLockElement && document.exitPointerLock) document.exitPointerLock();
+        if (labActive) {
+            const a = labActive;
+            labActive = null;
+            labKillDriveSfx(a);
+            if (a.raf !== null) cancelAnimationFrame(a.raf);
+            clearTimeout(a.resumeTimer);
+            clearTimeout(a.hintTimer);
+            window.removeEventListener('resize', a.onResize);
+            document.removeEventListener('keydown', a.fpKeyDown);
+            document.removeEventListener('keyup', a.fpKeyUp);
+            document.removeEventListener('mousemove', a.fpMouseMove);
+            document.removeEventListener('pointerlockchange', a.fpLockChange);
+            a.controls.dispose();
+            a.scene.traverse(o => {
+                if (o.geometry) o.geometry.dispose();
+                if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => m.dispose());
+            });
+            a.renderer.dispose();
+            a.renderer.domElement.remove();
+        }
+        if (labReturnFocus && labReturnFocus.focus) labReturnFocus.focus();
+        labReturnFocus = null;
+    }
+
+    function exitLab() {
+        navigate(playgroundReturn || '');
+    }
+    labExit.addEventListener('click', exitLab);
+
+    document.addEventListener('keydown', (e) => {
+        if (!lab.classList.contains('open')) return;
+        if (e.key === 'Escape') {
+            if (!labCard.hidden) labCloseCard();
+            else exitLab();
+        }
+        // Keep focus inside the overlay, cycling through its visible controls
+        // (exit button, card close, song players, links inside the open card)
+        if (e.key === 'Tab') {
+            const focusables = Array.from(lab.querySelectorAll('button, a[href], audio[controls]'))
+                .filter(el => el.getClientRects().length > 0);
+            if (!focusables.length) return;
+            e.preventDefault();
+            const i = focusables.indexOf(document.activeElement);
+            const next = e.shiftKey
+                ? (i <= 0 ? focusables.length - 1 : i - 1)
+                : (i === -1 || i === focusables.length - 1 ? 0 : i + 1);
+            focusables[next].focus();
+        }
+    });
+
+    // Don't render (or drain battery, or hum) while the tab is hidden
+    document.addEventListener('visibilitychange', () => {
+        if (labAudio) {
+            if (document.hidden) labAudio.suspend();
+            else if (labActive) labAudio.resume();
+        }
+        if (!labActive) return;
+        if (document.hidden) {
+            if (labActive.raf !== null) cancelAnimationFrame(labActive.raf);
+            labActive.raf = null;
+        } else if (labActive.raf === null) {
+            labActive.raf = requestAnimationFrame(labActive.tick);
+        }
+    });
+
+    function labBuildScene() {
+        const WARM = 0x211a13; // fixed warm backdrop — the 3D scene doesn't follow data-theme
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); // cap for high-DPI perf
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(WARM);
+        lab.insertBefore(renderer.domElement, lab.firstChild);
+
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.Fog(WARM, 16, 30);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 60);
+        camera.position.set(5.5, 4.5, 7);
+
+        // Warm key light + faint cool fill: a workshop at dusk
+        scene.add(new THREE.AmbientLight(0xffe9d0, 0.5));
+        const key = new THREE.DirectionalLight(0xffd9b0, 0.95);
+        key.position.set(5, 8, 4);
+        scene.add(key);
+        const fill = new THREE.DirectionalLight(0x8fa8d8, 0.3);
+        fill.position.set(-6, 4, -3);
+        scene.add(fill);
+
+        // Every mesh gets its own material so highlights never bleed between objects
+        function part(geo, color, opts) {
+            const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial(
+                Object.assign({ color: color, roughness: 0.85, metalness: 0.05 }, opts)));
+            m.userData.baseEmissive = m.material.emissive.getHex();
+            return m;
+        }
+
+        /* room: floor slab, rug, and two low walls forming a corner (kept low
+           so the auto-rotating camera never ends up staring at a blank wall) */
+        const floor = part(new THREE.BoxGeometry(9, 0.5, 9), 0x63503a, { roughness: 1 });
+        floor.position.y = -0.25;
+        const rug = part(new THREE.CylinderGeometry(1.7, 1.7, 0.05, 36), 0x9c5030, { roughness: 1 });
+        rug.position.y = 0.025;
+        const wallBack = part(new THREE.BoxGeometry(9, 1.4, 0.3), 0x75604a, { roughness: 1 });
+        wallBack.position.set(0, 0.7, -4.35);
+        const wallLeft = part(new THREE.BoxGeometry(0.3, 1.4, 9), 0x6d5944, { roughness: 1 });
+        wallLeft.position.set(-4.35, 0.7, 0);
+        scene.add(floor, rug, wallBack, wallLeft);
+
+        /* guitar resting on a stand, next to a little amp */
+        function buildGuitar() {
+            const g = new THREE.Group();
+            const STAND = 0x3a2c1e;
+            const TILT = -0.16; // guitar and stand post lean back together
+
+            const gtr = new THREE.Group();
+            const body = part(new THREE.CylinderGeometry(0.6, 0.6, 0.2, 26), 0xb06a35);
+            body.rotation.x = Math.PI / 2;
+            body.position.y = 0.6;
+            const hole = part(new THREE.CylinderGeometry(0.2, 0.2, 0.22, 18), 0x1d1814, { roughness: 1 });
+            hole.rotation.x = Math.PI / 2;
+            hole.position.set(0, 0.72, 0);
+            const neck = part(new THREE.BoxGeometry(0.14, 1.15, 0.08), 0x6e4a2a);
+            neck.position.set(0, 1.65, 0.02);
+            const head = part(new THREE.BoxGeometry(0.2, 0.32, 0.09), 0x2e1d12);
+            head.position.set(0, 2.35, 0.02);
+            const bridge = part(new THREE.BoxGeometry(0.26, 0.07, 0.05), 0x2e1d12);
+            bridge.position.set(0, 0.3, 0.11);
+            gtr.add(body, hole, neck, head, bridge);
+            gtr.rotation.x = TILT;      // reclines back onto the stand's post
+            gtr.position.y = 0.07;      // body sits on the stand's base plate
+
+            // stand: base plate, reclined back post with a neck yoke, two cradle pegs
+            const base = part(new THREE.BoxGeometry(0.72, 0.07, 0.5), STAND);
+            base.position.set(0, 0.035, -0.02);
+            const post = part(new THREE.BoxGeometry(0.08, 1.45, 0.08), STAND);
+            post.rotation.x = TILT;
+            post.position.set(0, 0.74, -0.2);
+            const yoke = part(new THREE.BoxGeometry(0.3, 0.07, 0.12), STAND);
+            yoke.rotation.x = TILT;
+            yoke.position.set(0, 1.45, -0.26);
+            g.add(gtr, base, post, yoke);
+            [-0.3, 0.3].forEach(x => {
+                const peg = part(new THREE.BoxGeometry(0.07, 0.22, 0.07), STAND);
+                peg.position.set(x, 0.18, 0.14);
+                g.add(peg);
+            });
+
+            const amp = part(new THREE.BoxGeometry(0.85, 0.7, 0.6), 0x2a211a);
+            amp.position.set(-0.95, 0.35, -0.05);
+            const grille = part(new THREE.BoxGeometry(0.72, 0.45, 0.05), 0x17110c, { roughness: 1 });
+            grille.position.set(-0.95, 0.3, 0.26);
+            g.add(amp, grille);
+            return g;
+        }
+
+        /* squat rack with a loaded bar */
+        function buildRack() {
+            const g = new THREE.Group();
+            const STEEL = 0x4a4550, IRON = 0x2b2730;
+            [-0.8, 0.8].forEach(x => {
+                const up = part(new THREE.BoxGeometry(0.16, 1.7, 0.16), STEEL, { roughness: 0.6, metalness: 0.4 });
+                up.position.set(x, 0.85, 0);
+                const foot = part(new THREE.BoxGeometry(0.22, 0.08, 0.8), IRON);
+                foot.position.set(x, 0.04, 0);
+                const hook = part(new THREE.BoxGeometry(0.12, 0.08, 0.24), IRON);
+                hook.position.set(x, 1.42, 0.14);
+                g.add(up, foot, hook);
+            });
+            const bar = part(new THREE.CylinderGeometry(0.045, 0.045, 2.9, 12), 0x9aa0a8, { roughness: 0.35, metalness: 0.8 });
+            bar.rotation.z = Math.PI / 2;
+            bar.position.set(0, 1.5, 0.14);
+            g.add(bar);
+            [1, -1].forEach(s => {
+                const p1 = part(new THREE.CylinderGeometry(0.4, 0.4, 0.09, 24), 0xb4592b, { roughness: 0.7 });
+                p1.rotation.z = Math.PI / 2;
+                p1.position.set(s * 1.08, 1.5, 0.14);
+                const p2 = part(new THREE.CylinderGeometry(0.4, 0.4, 0.09, 24), IRON);
+                p2.rotation.z = Math.PI / 2;
+                p2.position.set(s * 1.19, 1.5, 0.14);
+                const p3 = part(new THREE.CylinderGeometry(0.26, 0.26, 0.07, 20), IRON);
+                p3.rotation.z = Math.PI / 2;
+                p3.position.set(s * 1.28, 1.5, 0.14);
+                g.add(p1, p2, p3);
+            });
+            return g;
+        }
+
+        /* stack of books, slightly askew */
+        function buildBooks() {
+            const g = new THREE.Group();
+            let y = 0;
+            [
+                [0.95, 0.16, 0.68, 0xa04c3c, 0.10],
+                [0.85, 0.13, 0.62, 0x5e7c9c, -0.18],
+                [0.90, 0.17, 0.64, 0x5e9c66, 0.24],
+                [0.70, 0.12, 0.50, 0xc9a04a, -0.06],
+            ].forEach(([w, h, d, color, rot]) => {
+                const b = part(new THREE.BoxGeometry(w, h, d), color, { roughness: 0.9 });
+                b.position.y = y + h / 2;
+                b.rotation.y = rot;
+                y += h;
+                g.add(b);
+            });
+            return g;
+        }
+
+        /* sleeping AMR, parked on a charger pad in the front-left corner.
+           Clicking it wakes it up and hands you the controls (first person). */
+        let robotEye, robotPuck;
+        function buildRobot() {
+            const g = new THREE.Group();
+            const skirt = part(new THREE.BoxGeometry(1.35, 0.22, 0.95), 0x2b2730);
+            skirt.position.y = 0.25;
+            const body = part(new THREE.BoxGeometry(1.2, 0.45, 0.82), 0xd8d2c4, { roughness: 0.55 });
+            body.position.y = 0.58;
+            const top = part(new THREE.BoxGeometry(0.9, 0.1, 0.6), 0xb4592b);
+            top.position.y = 0.85;
+            g.add(skirt, body, top);
+            [[-0.4, 0.44], [0.4, 0.44], [-0.4, -0.44], [0.4, -0.44]].forEach(([x, z]) => {
+                const w = part(new THREE.CylinderGeometry(0.16, 0.16, 0.1, 16), 0x1d1a20, { roughness: 0.9 });
+                w.rotation.x = Math.PI / 2;
+                w.position.set(x, 0.16, z);
+                g.add(w);
+            });
+            const mast = part(new THREE.CylinderGeometry(0.045, 0.045, 0.35, 10), 0x4a4550);
+            mast.position.set(-0.35, 1.05, 0);
+            // lidar puck + scanner eye start dark — it's asleep until clicked
+            robotPuck = part(new THREE.CylinderGeometry(0.11, 0.11, 0.1, 16), 0x1d1a20, { roughness: 0.6 });
+            robotPuck.position.set(-0.35, 1.28, 0);
+            robotEye = part(new THREE.BoxGeometry(0.06, 0.1, 0.5), 0x141118);
+            robotEye.position.set(0.61, 0.62, 0);
+            g.add(mast, robotPuck, robotEye);
+            return g;
+        }
+
+        const CHARGER = { x: -3.45, z: 3.1 };
+        const charger = new THREE.Group();
+        {
+            const pad = part(new THREE.BoxGeometry(1.5, 0.06, 1.25), 0x241e18, { roughness: 1 });
+            pad.position.y = 0.03;
+            const post = part(new THREE.BoxGeometry(0.16, 0.55, 0.4), 0x2b2730);
+            post.position.set(-0.62, 0.28, 0);
+            const light = part(new THREE.BoxGeometry(0.05, 0.08, 0.16), 0x1d1a20, { emissive: 0x7fbe88, emissiveIntensity: 0.7 });
+            light.position.set(-0.53, 0.4, 0);
+            charger.add(pad, post, light);
+            charger.position.set(CHARGER.x, 0, CHARGER.z);
+            scene.add(charger);
+        }
+
+        const pickables = [];
+        const raycaster = new THREE.Raycaster();
+        const ndc = new THREE.Vector2();
+
+        function place(group, labelText, cardId, x, z, ry) {
+            group.position.set(x, 0, z);
+            group.rotation.y = ry;
+            group.userData.interactive = true;
+            group.userData.label = labelText;
+            group.userData.cardId = cardId;
+            scene.add(group);
+            const box = new THREE.Box3().setFromObject(group);
+            const c = box.getCenter(new THREE.Vector3());
+            const size = box.getSize(new THREE.Vector3());
+            group.userData.center = c.clone();
+            group.userData.radius = size.length() / 2;
+            group.userData.colR = Math.max(size.x, size.z) / 2; // walk-around footprint
+            group.userData.anchor = new THREE.Vector3(c.x, box.max.y + 0.3, c.z);
+            pickables.push(group);
+        }
+
+        place(buildGuitar(), 'Guitar', 'interest-guitar', -2.4, -2.7, 0.55);
+        place(buildRack(), 'Lifting', 'interest-lifting', 2.3, -2.9, -0.15);
+        place(buildBooks(), 'Reading', 'interest-reading', 0.1, 2.1, -0.2);
+        const robot = buildRobot();
+        place(robot, 'Sleeping AMR', null, CHARGER.x, CHARGER.z, 0.74);
+        robot.userData.fp = true; // clicking it enters first-person mode
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.target.set(0, 0.7, 0);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.08;
+        controls.enablePan = false;
+        controls.minDistance = 3.5;
+        controls.maxDistance = 14;
+        controls.maxPolarAngle = Math.PI * 0.49; // never dip below the floor
+        controls.autoRotate = !labReducedMotion(); // ambient idle drift
+        controls.autoRotateSpeed = 0.7;
+
+        // Pause the idle drift while the user drags; resume shortly after
+        controls.addEventListener('start', () => {
+            controls.autoRotate = false;
+            if (labActive) clearTimeout(labActive.resumeTimer);
+        });
+        controls.addEventListener('end', () => {
+            if (!labActive || labReducedMotion()) return;
+            clearTimeout(labActive.resumeTimer);
+            labActive.resumeTimer = setTimeout(() => { controls.autoRotate = true; }, 3000);
+        });
+
+        // The default framing, remembered so closing a card can glide back out
+        const homePos = camera.position.clone();
+        const homeTgt = controls.target.clone();
+
+        // Camera flight to an arbitrary pose; runs `done` on arrival.
+        // Reduced motion jumps straight there.
+        let flight = null;
+        function flyToPose(toPos, toTgt, done) {
+            controls.autoRotate = false;
+            if (labActive) clearTimeout(labActive.resumeTimer);
+            if (labReducedMotion()) {
+                camera.position.copy(toPos);
+                controls.target.copy(toTgt);
+                controls.update();
+                done();
+                return;
+            }
+            controls.enabled = false; // no drag fighting mid-flight
+            flight = {
+                t0: performance.now(),
+                dur: 850,
+                fromPos: camera.position.clone(),
+                toPos: toPos.clone(),
+                fromTgt: controls.target.clone(),
+                toTgt: toTgt.clone(),
+                done: done
+            };
+        }
+
+        // Flight toward a clicked object: keep the side of the scene the camera
+        // is already on and frame the object by its size.
+        function flyTo(group, done) {
+            const c = group.userData.center;
+            const dir = camera.position.clone().sub(c);
+            dir.y = 0;
+            if (dir.lengthSq() < 0.01) dir.set(1, 0, 1);
+            dir.normalize();
+            const dist = Math.max(3, group.userData.radius * 2.6);
+            const toPos = c.clone().addScaledVector(dir, dist);
+            toPos.y = c.y + dist * 0.55;
+            flyToPose(toPos, c, done);
+        }
+
+        function pick(x, y) {
+            ndc.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1);
+            raycaster.setFromCamera(ndc, camera);
+            const hits = raycaster.intersectObjects(pickables, true);
+            for (const h of hits) {
+                let o = h.object;
+                while (o && !o.userData.interactive) o = o.parent;
+                if (o) return o;
+            }
+            return null;
+        }
+
+        function setGlow(group, on) {
+            group.traverse(o => {
+                // skip parts with their own emissive (robot eye/lidar) — they keep their look
+                if (o.isMesh && o.userData.baseEmissive === 0) {
+                    o.material.emissive.setHex(on ? 0x6e3418 : 0);
+                }
+            });
+        }
+
+        function setFocused(g) {
+            if (g === labFocused) return;
+            if (labFocused) setGlow(labFocused, false);
+            labFocused = g;
+            if (g) {
+                setGlow(g, true);
+                labLabel.textContent = g.userData.label;
+                labLabel.classList.add('show');
+            } else {
+                labLabel.classList.remove('show');
+            }
+            renderer.domElement.style.cursor = g ? 'pointer' : '';
+        }
+
+        // Desktop: hover highlights, click flies the camera over and opens the card.
+        // Touch: first tap highlights + names, second tap on the same object opens.
+        // A tap only counts if the pointer barely moved and wasn't part of a pinch.
+        // Tapping empty space closes an open card.
+        const canvas = renderer.domElement;
+        let downAt = null, multiTouch = false, pointersDown = 0;
+
+        function openFor(hit) {
+            if (labActive && labActive.mode !== 'orbit') return;
+            if (hit.userData.fp) { beginPowerOn(); return; }
+            if (hit === labCardFor) return; // its card is already open
+            labCloseCard();
+            setFocused(hit);
+            flyTo(hit, () => labShowCard(hit));
+        }
+
+        /* ── First-person mode: wake the robot and drive it around ── */
+        const FP = {
+            eyeH: 0.8,     // camera height — the robot's sensor mast
+            speed: 2.6,    // m/s
+            pr: 0.45,      // player collision radius
+            yaw: 0, pitch: 0,
+            keys: {},
+            joy: null,     // touch joystick pointer {id, sx, sy, x, y}
+            look: null,    // drag-look pointer {id, x, y}
+            zone: null,    // interest group whose card zone we're inside
+            dismissed: null // card closed by hand — stays closed until we leave its zone
+        };
+        const cardGroups = pickables.filter(g => g.userData.cardId);
+
+        function showHint(text) {
+            labHint.textContent = text;
+            labHint.classList.add('show');
+            clearTimeout(labActive.hintTimer);
+            labActive.hintTimer = setTimeout(() => labHint.classList.remove('show'), 6500);
+        }
+
+        function beginPowerOn() {
+            labActive.mode = 'powering';
+            const gen = labGen;
+            labAudioCtx(); // unlock audio while we're still inside the click gesture
+            labCloseCard();
+            setFocused(null);
+            flyTo(robot, () => {
+                // wake-up: the scanner eye blinks awake, then the lidar spins up
+                [
+                    [0,   () => { labBootSound(); robotEye.material.emissive.setHex(0xd9784a); robotEye.material.emissiveIntensity = 0.9; }],
+                    [150, () => { robotEye.material.emissive.setHex(0x000000); }],
+                    [300, () => {
+                        robotEye.material.emissive.setHex(0xd9784a);
+                        robotPuck.material.emissive.setHex(0xb4592b);
+                        robotPuck.material.emissiveIntensity = 0.6;
+                    }],
+                    [750, enterFP]
+                ].forEach(([t, fn]) => setTimeout(() => { if (labGen === gen) fn(); }, t));
+            });
+        }
+
+        // FPS-style mouse capture. Failure (denied, unsupported, iframe policy)
+        // is fine — drag-to-look below keeps working as the fallback.
+        function lockPointer() {
+            if (navigator.maxTouchPoints > 0 || !canvas.requestPointerLock) return;
+            try {
+                const p = canvas.requestPointerLock();
+                if (p && p.catch) p.catch(() => {});
+            } catch (e) {}
+        }
+
+        function fpMouseMove(e) {
+            if (!labActive || labActive.mode !== 'fp') return;
+            if (document.pointerLockElement !== canvas) return;
+            FP.yaw -= e.movementX * 0.0024;
+            FP.pitch = Math.max(-1.1, Math.min(1.1, FP.pitch - e.movementY * 0.0024));
+        }
+        document.addEventListener('mousemove', fpMouseMove);
+
+        function fpLockChange() {
+            // Browser Esc releases the lock before the page sees any keydown —
+            // tell the user how to get it back (or leave).
+            if (labActive && labActive.mode === 'fp' && document.pointerLockElement !== canvas) {
+                showHint('Mouse released — click to recapture it, or press Esc again to leave the lab');
+            }
+        }
+        document.addEventListener('pointerlockchange', fpLockChange);
+
+        function enterFP() {
+            const eyePos = new THREE.Vector3(robot.position.x, FP.eyeH, robot.position.z);
+            flyToPose(eyePos, new THREE.Vector3(0, FP.eyeH, 0), () => {
+                robot.visible = false; // you *are* the robot now
+                FP.yaw = Math.atan2(eyePos.x, eyePos.z); // face the room centre
+                FP.pitch = 0;
+                FP.keys = {};
+                FP.joy = FP.look = null;
+                FP.zone = FP.dismissed = null;
+                camera.rotation.order = 'YXZ';
+                labActive.mode = 'fp';
+                labActive.driveSfx = labStartDriveSfx();
+                lockPointer();
+                showHint(navigator.maxTouchPoints > 0
+                    ? 'Left thumb: drive · right: look around · roll back onto the charger to power down'
+                    : 'WASD / arrows: drive · move the mouse to look around · dock at the charger to power down');
+            });
+        }
+
+        function tryDock() {
+            if (!labActive || labActive.mode !== 'fp') return;
+            if (Math.hypot(camera.position.x - CHARGER.x, camera.position.z - CHARGER.z) > 1.25) return;
+            if (document.pointerLockElement && document.exitPointerLock) document.exitPointerLock();
+            labKillDriveSfx(labActive);
+            labPrompt.hidden = true;
+            labHint.classList.remove('show');
+            labCloseCard(); // fp mode: hides only, no camera flight
+            FP.zone = FP.dismissed = null;
+            robot.visible = true;
+            robotEye.material.emissive.setHex(0x000000);  // lights out — asleep again
+            robotPuck.material.emissive.setHex(0x000000);
+            labActive.mode = 'orbit';
+            labActive.flyHome(() => {
+                if (labActive && !labReducedMotion()) {
+                    clearTimeout(labActive.resumeTimer);
+                    labActive.resumeTimer = setTimeout(() => { controls.autoRotate = true; }, 1500);
+                }
+            });
+            labExit.focus();
+        }
+        labPrompt.onclick = tryDock; // property assignment: no stacking across rebuilds
+
+        function fpKeyDown(e) {
+            if (!labActive || labActive.mode !== 'fp') return;
+            const k = e.key.toLowerCase();
+            if (k === 'e') { tryDock(); return; }
+            if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(k)) {
+                FP.keys[k] = true;
+                e.preventDefault();
+            }
+        }
+        function fpKeyUp(e) { FP.keys[e.key.toLowerCase()] = false; }
+        document.addEventListener('keydown', fpKeyDown);
+        document.addEventListener('keyup', fpKeyUp);
+
+        function fpUpdate(dt) {
+            // input → planar movement in the yaw frame
+            const k = FP.keys;
+            let f = (k.w || k.arrowup ? 1 : 0) - (k.s || k.arrowdown ? 1 : 0);
+            let s = (k.d || k.arrowright ? 1 : 0) - (k.a || k.arrowleft ? 1 : 0);
+            if (FP.joy) { s += FP.joy.x; f -= FP.joy.y; }
+            const len = Math.hypot(f, s);
+            if (len > 1) { f /= len; s /= len; }
+            // motor hum follows the throttle — gentle swell, modest pitch rise
+            const sfx = labActive.driveSfx;
+            if (sfx) {
+                const mv = Math.min(1, len);
+                const at = sfx.ctx.currentTime;
+                sfx.gain.gain.setTargetAtTime(mv > 0.05 ? 0.03 + mv * 0.015 : 0, at, 0.12);
+                sfx.oscs.forEach((o, i) => {
+                    o.frequency.setTargetAtTime((52 + i * 1.2) * (1 + mv * 0.3), at, 0.15);
+                });
+            }
+            const sin = Math.sin(FP.yaw), cos = Math.cos(FP.yaw);
+            let x = camera.position.x + (s * cos - f * sin) * FP.speed * dt;
+            let z = camera.position.z + (-s * sin - f * cos) * FP.speed * dt;
+
+            // stay on the floor slab, inside the two walls…
+            x = Math.max(-3.75, Math.min(3.75, x));
+            z = Math.max(-3.75, Math.min(3.75, z));
+            // …and out of the exhibits (simple circle colliders)
+            pickables.forEach(g => {
+                if (g === robot) return;
+                const c = g.userData.center;
+                const r = g.userData.colR + FP.pr;
+                const dx = x - c.x, dz = z - c.z;
+                const d = Math.hypot(dx, dz);
+                if (d > 0.0001 && d < r) { x = c.x + dx / d * r; z = c.z + dz / d * r; }
+            });
+            camera.position.set(x, FP.eyeH, z);
+            camera.rotation.set(FP.pitch, FP.yaw, 0);
+
+            // interest cards pop up as you roll close, and hide as you leave
+            // (slightly larger leave radius so the edge doesn't flicker)
+            if (FP.zone) {
+                const c = FP.zone.userData.center;
+                if (Math.hypot(x - c.x, z - c.z) > FP.zone.userData.colR + 1.7) {
+                    FP.zone = FP.dismissed = null;
+                    labCloseCard();
+                } else if (labCard.hidden && FP.dismissed !== FP.zone) {
+                    FP.dismissed = FP.zone; // closed by hand — leave it closed here
+                }
+            }
+            if (!FP.zone) {
+                for (const g of cardGroups) {
+                    const c = g.userData.center;
+                    if (Math.hypot(x - c.x, z - c.z) < g.userData.colR + 1.25) {
+                        FP.zone = g;
+                        if (FP.dismissed !== g) labShowCard(g, true);
+                        break;
+                    }
+                }
+            }
+
+            // dock prompt when back at the charger
+            const near = Math.hypot(x - CHARGER.x, z - CHARGER.z) < 1.25;
+            if (labPrompt.hidden === near) labPrompt.hidden = !near;
+        }
+
+        function labMode() { return labActive ? labActive.mode : 'orbit'; }
+
+        canvas.addEventListener('pointermove', (e) => {
+            if (labMode() === 'fp') {
+                if (FP.joy && e.pointerId === FP.joy.id) {
+                    // virtual stick: offset from where the finger landed
+                    FP.joy.x = Math.max(-1, Math.min(1, (e.clientX - FP.joy.sx) / 55));
+                    FP.joy.y = Math.max(-1, Math.min(1, (e.clientY - FP.joy.sy) / 55));
+                } else if (FP.look && e.pointerId === FP.look.id) {
+                    FP.yaw -= (e.clientX - FP.look.x) * 0.005;
+                    FP.pitch = Math.max(-1.1, Math.min(1.1, FP.pitch - (e.clientY - FP.look.y) * 0.005));
+                    FP.look.x = e.clientX;
+                    FP.look.y = e.clientY;
+                }
+                return;
+            }
+            if (labMode() === 'orbit' && e.pointerType === 'mouse') setFocused(pick(e.clientX, e.clientY));
+        });
+        canvas.addEventListener('pointerleave', (e) => {
+            if (labMode() === 'orbit' && e.pointerType === 'mouse') setFocused(null);
+        });
+        canvas.addEventListener('pointerdown', (e) => {
+            if (labMode() === 'fp') {
+                if (e.pointerType === 'mouse') {
+                    if (document.pointerLockElement !== canvas) {
+                        lockPointer(); // (re)capture — e.g. after the browser's Esc released it
+                        // drag-look fallback for browsers where the lock is unavailable;
+                        // harmless when the lock lands (clientX freezes, so deltas are 0)
+                        if (!FP.look) FP.look = { id: e.pointerId, x: e.clientX, y: e.clientY };
+                    }
+                    return;
+                }
+                // touch in the lower-left corner drives; everything else looks
+                const stick = e.clientX < window.innerWidth * 0.45
+                    && e.clientY > window.innerHeight * 0.5;
+                if (stick && !FP.joy) FP.joy = { id: e.pointerId, sx: e.clientX, sy: e.clientY, x: 0, y: 0 };
+                else if (!FP.look) FP.look = { id: e.pointerId, x: e.clientX, y: e.clientY };
+                try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+                return;
+            }
+            pointersDown++;
+            if (pointersDown > 1) { multiTouch = true; downAt = null; }
+            else { multiTouch = false; downAt = { x: e.clientX, y: e.clientY }; }
+        });
+        function fpPointerEnd(e) {
+            if (FP.joy && e.pointerId === FP.joy.id) FP.joy = null;
+            if (FP.look && e.pointerId === FP.look.id) FP.look = null;
+        }
+        canvas.addEventListener('pointercancel', (e) => {
+            fpPointerEnd(e);
+            pointersDown = 0;
+            downAt = null;
+        });
+        canvas.addEventListener('pointerup', (e) => {
+            if (labMode() === 'fp') { fpPointerEnd(e); return; }
+            pointersDown = Math.max(0, pointersDown - 1);
+            if (multiTouch || !downAt) return;
+            const moved = Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y);
+            downAt = null;
+            if (moved > 8) return; // that was a drag, not a tap
+            if (labMode() !== 'orbit') return; // mid power-on: ignore taps
+            const hit = pick(e.clientX, e.clientY);
+            if (e.pointerType === 'mouse') {
+                if (hit) openFor(hit);
+                else labCloseCard();
+            } else if (hit && hit === labFocused) {
+                openFor(hit); // second tap confirms
+            } else {
+                setFocused(hit);
+                if (!hit) labCloseCard();
+            }
+        });
+
+        function onResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        window.addEventListener('resize', onResize);
+
+        const tmpV = new THREE.Vector3();
+        let lastTick = null;
+        function tick() {
+            const a = labActive;
+            if (!a || a.renderer !== renderer) return; // stale loop after teardown
+            a.raf = requestAnimationFrame(tick);
+            const now = performance.now();
+            const dt = lastTick === null ? 0 : Math.min((now - lastTick) / 1000, 0.1);
+            lastTick = now;
+            if (flight) {
+                const k = Math.min(1, (now - flight.t0) / flight.dur);
+                const s = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; // easeInOutCubic
+                camera.position.lerpVectors(flight.fromPos, flight.toPos, s);
+                controls.target.lerpVectors(flight.fromTgt, flight.toTgt, s);
+                camera.lookAt(controls.target);
+                if (k === 1) {
+                    const f = flight;
+                    flight = null;
+                    controls.enabled = a.mode === 'orbit'; // stays off in first person
+                    if (controls.enabled) controls.update();
+                    f.done();
+                }
+            } else if (a.mode === 'fp') {
+                fpUpdate(dt);
+            } else if (a.mode === 'orbit') {
+                controls.update();
+            }
+            renderer.render(scene, camera);
+            // keep the name label pinned above the focused object as the camera moves
+            if (labFocused && a.mode === 'orbit') {
+                tmpV.copy(labFocused.userData.anchor).project(camera);
+                if (tmpV.z < 1) {
+                    labLabel.style.left = ((tmpV.x * 0.5 + 0.5) * window.innerWidth) + 'px';
+                    labLabel.style.top = ((-tmpV.y * 0.5 + 0.5) * window.innerHeight) + 'px';
+                }
+            }
+        }
+
+        labActive = {
+            renderer, scene, camera, controls,
+            mode: 'orbit', // 'orbit' | 'powering' (wake-up cutscene) | 'fp'
+            raf: null, resumeTimer: null, hintTimer: null, driveSfx: null,
+            onResize, tick, fpKeyDown, fpKeyUp, fpMouseMove, fpLockChange,
+            flyHome: (done) => flyToPose(homePos, homeTgt, done || function () {})
+        };
+        labActive.raf = requestAnimationFrame(tick);
+    }
+
     /* ── Hash router ── */
 
     // Accepts both '#toyota' and '#/toyota' forms.
@@ -2415,6 +3511,15 @@
     // (deep links) and on every hashchange (back/forward buttons included).
     function applyRoute() {
         const route = currentRoute();
+
+        // The Lab overlays whatever view is behind it; every other route
+        // tears it down (a no-op when it isn't open).
+        if (route === 'playground') {
+            openPlayground();
+            return;
+        }
+        closePlayground();
+        playgroundReturn = route; // where the lab's Back button returns to
 
         if (route === 'me') {
             renderTab('me');
@@ -2432,13 +3537,19 @@
             return;
         }
 
-        // Anchor to a specific project (e.g. #guitar-cv): open the view
-        // that contains it, then scroll to it.
+        // Anchor to a specific element (e.g. #guitar-cv): open the view that
+        // contains it, then scroll to it. Elements inside The Lab (the interest
+        // cards) aren't scroll targets — they're only reachable in the 3D scene.
         const el = route ? document.getElementById(route) : null;
-        if (el) {
-            const detail = el.closest('.cat-detail');
-            if (detail) renderCategory(detail.id.replace('cat-', ''));
-            else renderHub();
+        if (el && !el.closest('#playground')) {
+            if (el.closest('#panel-me')) {
+                renderTab('me');
+                document.getElementById('global-back').style.display = 'none';
+            } else {
+                const detail = el.closest('.cat-detail');
+                if (detail) renderCategory(detail.id.replace('cat-', ''));
+                else renderHub();
+            }
             setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
             return;
         }
@@ -2495,6 +3606,17 @@
     lightbox.addEventListener('click', (e) => {
         // Close on backdrop or X — anywhere except the image itself
         if (e.target !== lightboxImg) closeLightbox();
+    });
+
+    // Escape from a project detail view = the Back button (return to the hub).
+    // Ordering matters: The Lab's handler ran before this one (its overlay only
+    // loses .open on the async hashchange, so the check below still sees it),
+    // and the lightbox's own handler runs after — with the lightbox open this
+    // returns early and lets it close the lightbox instead.
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        if (lightbox.classList.contains('open') || lab.classList.contains('open')) return;
+        if (document.getElementById('global-back').style.display !== 'none') navigate('');
     });
 
     document.addEventListener('keydown', (e) => {
@@ -2750,8 +3872,10 @@
             players.push(player);
         });
 
-        // Navigating away (e.g. to Projects) shouldn't leave music playing
-        window.addEventListener('hashchange', () => players.forEach(p => p.stop()));
+        // Navigating away (e.g. to Projects) shouldn't leave music playing.
+        // Also exposed for The Lab, which stops the music when its card closes.
+        window.stopSongPlayers = () => players.forEach(p => p.stop());
+        window.addEventListener('hashchange', window.stopSongPlayers);
     })();
 
     /* ── Powerlifting plate glyphs ── */
