@@ -444,6 +444,63 @@
             line-height: 1.8;
         }
 
+        /* ── RL ARM TRAINING-RUNS TABLE ──
+           Scoped to the rl-arm How block; not a global whi-block change.
+           Wrapper lets the table scroll horizontally on narrow screens
+           without dragging the ~800px readable column sideways. */
+        .rl-runs-wrap {
+            overflow-x: auto;
+            margin-top: 1.15rem;
+            -webkit-overflow-scrolling: touch;
+        }
+        .rl-runs {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 600px;
+            font-size: 0.8rem;
+            color: var(--body);
+            line-height: 1.5;
+        }
+        .rl-runs th,
+        .rl-runs td {
+            text-align: left;
+            vertical-align: top;
+            padding: 0.6rem 0.85rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .rl-runs thead th {
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+            border-bottom: 1px solid var(--border2);
+        }
+        .rl-runs tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .rl-runs .rl-run-name {
+            font-weight: 600;
+            color: var(--text);
+        }
+        /* Iterations (2nd column): keep each range on one line so it doesn't
+           wrap after the en-dash. Applies on screen and in the print summary. */
+        .rl-runs th:nth-child(2),
+        .rl-runs td:nth-child(2) {
+            white-space: nowrap;
+        }
+        /* Video cells reuse the .video-btn pill (identical to the Side/Front
+           View buttons up top); drop the button's stock bottom margin and
+           let multiple buttons stack within one cell. */
+        .rl-video-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        .rl-runs .video-btn {
+            margin-bottom: 0;
+            white-space: nowrap;
+        }
+
         /* ── VIDEO DEMO BUTTON ── */
         .video-btn {
             display: inline-flex;
@@ -1556,6 +1613,354 @@
             .img-grid.cols-3 { grid-template-columns: 1fr 1fr; }
             .song-entries { grid-template-columns: 1fr; }
         }
+
+        /* Subordinate convenience link on the Me page — Ctrl+P works the same */
+        .print-summary-link {
+            background: none;
+            border: none;
+            padding: 0;
+            margin-top: 0.9rem;
+            font-family: inherit;
+            font-size: 0.75rem;
+            color: var(--dim);
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-underline-offset: 3px;
+            cursor: pointer;
+        }
+        .print-summary-link:hover { color: var(--mid); }
+
+        /* ── PRINT SUMMARY MODAL ──
+           Same interaction pattern as .lightbox: overlay backdrop, .open
+           class, Escape closes, focus trapped inside the panel. */
+        .print-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--overlay);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.18s ease, visibility 0.18s ease;
+        }
+        .print-modal.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        body.print-modal-open { overflow: hidden; }
+
+        .print-modal-panel {
+            background: var(--bg);
+            border: 1px solid var(--border2);
+            border-radius: 10px;
+            box-shadow: 0 8px 40px var(--shadow-mid);
+            padding: 1.5rem 1.75rem;
+            width: min(30rem, calc(100vw - 2rem));
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+        .print-modal-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .print-modal-modes {
+            display: flex;
+            gap: 1.25rem;
+            font-size: 0.85rem;
+            color: var(--body);
+        }
+        .print-mode-opt {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
+        }
+        .print-modal-modes input,
+        .print-proj-opt input {
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+        .print-modal-bulk { display: flex; gap: 1rem; }
+        .print-bulk-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            font-family: inherit;
+            font-size: 0.75rem;
+            color: var(--dim);
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-underline-offset: 3px;
+            cursor: pointer;
+        }
+        .print-bulk-btn:hover { color: var(--mid); }
+        .print-modal-list {
+            overflow-y: auto;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 0.25rem 0 0.6rem;
+        }
+        .print-cat-label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--dim);
+            margin: 0.7rem 0 0.25rem;
+        }
+        .print-proj-opt {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--body);
+            padding: 0.16rem 0;
+            cursor: pointer;
+        }
+        .print-modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.6rem;
+        }
+        .print-cancel-btn, .print-generate-btn {
+            font-family: inherit;
+            font-size: 0.8rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s, opacity 0.15s;
+        }
+        .print-cancel-btn {
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            color: var(--text);
+        }
+        .print-cancel-btn:hover { border-color: var(--mid); background: var(--border); }
+        .print-generate-btn {
+            background: var(--accent);
+            border: 1px solid transparent;
+            color: #fff;
+            font-weight: 600;
+        }
+        .print-generate-btn:disabled { opacity: 0.45; cursor: default; }
+
+        /* ── PRINT SUMMARY ──
+           Hidden on screen; the @media print block at the end hides the
+           entire screen UI and shows only this summary, regardless of theme
+           or active view. Colors are hardcoded neutrals on purpose — the
+           printout must be plain black-on-white in both themes. The
+           ps-full / ps-condensed class on the container comes from the
+           mode picked in the modal (Full is the default).
+
+           These rules live OUTSIDE @media print so fitPrintSummary() can
+           lay the summary out invisibly on screen at print width and
+           measure it; they never affect the visible page because
+           #print-summary is display:none on screen. */
+        #print-summary {
+            display: none;
+            color: #111;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 9.5pt;
+            line-height: 1.4;
+        }
+        #print-summary.ps-condensed {
+            font-size: 9pt;
+            line-height: 1.35;
+        }
+        #print-summary a {
+            color: #8a4020;
+            text-decoration: underline;
+        }
+
+        .ps-header {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 8pt;
+            margin-bottom: 10pt;
+        }
+        .ps-doc-title {
+            font-size: 10pt;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #555;
+            margin-bottom: 4pt;
+        }
+        .ps-name {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 16pt;
+            font-weight: 600;
+        }
+        .ps-header-meta {
+            font-size: 9pt;
+            color: #555;
+            margin-top: 2pt;
+        }
+
+        .ps-cat-heading {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 12pt;
+            font-weight: 600;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 2pt;
+            margin: 12pt 0 6pt;
+            /* don't strand a category heading at the bottom of a page */
+            break-after: avoid;
+            page-break-after: avoid;
+        }
+        #print-summary.ps-condensed .ps-cat-heading { margin: 9pt 0 4pt; }
+        .ps-cat-date {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 8.5pt;
+            font-weight: 400;
+            color: #555;
+            margin-left: 6pt;
+        }
+
+        .ps-project {
+            break-inside: avoid;
+            page-break-inside: avoid;
+            margin-bottom: 12pt;
+        }
+        /* Full-mode blocks are tall: keeping them unbreakable shoves the
+           whole block onto the next page and leaves a big blank gap when
+           only a few projects are selected. Let them flow across pages
+           instead — the head chunk stays together (.ps-project-head) and
+           paragraphs never split (.ps-whi), so breaks land cleanly. */
+        #print-summary.ps-full .ps-project {
+            break-inside: auto;
+            page-break-inside: auto;
+        }
+        .ps-project-head {
+            break-inside: avoid;
+            page-break-inside: avoid;
+            break-after: avoid;
+            page-break-after: avoid;
+        }
+        #print-summary.ps-condensed .ps-project {
+            overflow: hidden; /* contains the floated thumbnail */
+            margin-bottom: 7pt;
+        }
+        .ps-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 10.5pt;
+            font-weight: 600;
+            margin-bottom: 1pt;
+        }
+        .ps-stack {
+            font-size: 8.5pt;
+            color: #555;
+            margin-bottom: 1pt;
+        }
+        .ps-links {
+            font-size: 8.5pt;
+            margin-bottom: 2pt;
+        }
+        .ps-links .ps-sep { color: #999; margin: 0 3pt; }
+
+        /* Full mode: labelled What/How/Impact paragraphs + an image row */
+        .ps-whi {
+            margin-bottom: 2pt;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+        .ps-whi-label { font-weight: 600; }
+        .ps-imgs {
+            display: flex;
+            gap: 6pt;
+            margin: 3pt 0 2pt;
+        }
+        .ps-imgs img {
+            max-height: 1.6in;
+            max-width: 2.4in;
+            border: 1px solid #ccc;
+        }
+
+        /* Condensed mode: a single small thumbnail floated beside the text */
+        .ps-thumb {
+            float: right;
+            max-height: 1.2in;
+            max-width: 1.9in;
+            margin: 0 0 3pt 7pt;
+            border: 1px solid #ccc;
+        }
+
+        /* A data table cloned into the How block (Full mode only, e.g. the
+           rl-arm training runs). Force the same hardcoded black-on-white as
+           the rest of the summary — the on-screen table uses theme custom
+           properties — and render the video pills as plain printable links. */
+        .ps-table-wrap {
+            margin: 4pt 0 2pt;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+        #print-summary .rl-runs {
+            min-width: 0;
+            font-size: 8pt;
+            line-height: 1.3;
+            color: #111;
+        }
+        #print-summary .rl-runs th,
+        #print-summary .rl-runs td {
+            padding: 3pt 7pt 3pt 0;
+            border-bottom: 1px solid #ccc;
+        }
+        #print-summary .rl-runs thead th {
+            color: #111;
+            border-bottom: 1px solid #999;
+        }
+        #print-summary .rl-runs tbody tr:last-child td { border-bottom: none; }
+        #print-summary .rl-runs .rl-run-name { color: #111; }
+        #print-summary .rl-video-cell { gap: 2pt; }
+        #print-summary .rl-runs .video-btn {
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            margin: 0;
+            font-size: 8pt;
+            color: #8a4020;
+            text-decoration: underline;
+        }
+        #print-summary .rl-runs .video-btn svg { display: none; }
+
+        /* Auto-fit shrink levels: applied by fitPrintSummary() when the
+           content barely spills onto an extra, mostly blank page. Level 1
+           is a gentle tightening; level 2 is the strongest we allow before
+           giving up and keeping full size. Keep these AFTER the mode rules
+           so they win at equal specificity. */
+        #print-summary.ps-shrink-1 { font-size: 9pt; line-height: 1.35; }
+        #print-summary.ps-condensed.ps-shrink-1 { font-size: 8.5pt; }
+        #print-summary.ps-shrink-1 .ps-imgs img { max-height: 1.35in; }
+        #print-summary.ps-shrink-1 .ps-thumb { max-height: 1in; }
+        #print-summary.ps-shrink-1 .ps-project { margin-bottom: 8pt; }
+        #print-summary.ps-condensed.ps-shrink-1 .ps-project { margin-bottom: 6pt; }
+        #print-summary.ps-shrink-1 .ps-cat-heading { margin: 9pt 0 4pt; }
+
+        #print-summary.ps-shrink-2 { font-size: 8.5pt; line-height: 1.3; }
+        #print-summary.ps-condensed.ps-shrink-2 { font-size: 8pt; }
+        #print-summary.ps-shrink-2 .ps-imgs img { max-height: 1.1in; }
+        #print-summary.ps-shrink-2 .ps-thumb { max-height: 0.85in; }
+        #print-summary.ps-shrink-2 .ps-project { margin-bottom: 6pt; }
+        #print-summary.ps-condensed.ps-shrink-2 .ps-project { margin-bottom: 5pt; }
+        #print-summary.ps-shrink-2 .ps-cat-heading { margin: 7pt 0 3pt; }
+        #print-summary.ps-shrink-2 .ps-header { padding-bottom: 5pt; margin-bottom: 6pt; }
+        #print-summary.ps-shrink-2 .ps-name { font-size: 14pt; }
+        #print-summary.ps-shrink-2 .ps-title { font-size: 10pt; }
+        #print-summary.ps-shrink-2 .ps-stack,
+        #print-summary.ps-shrink-2 .ps-links { font-size: 8pt; }
+
+        @media print {
+            @page { size: letter; margin: 0.6in; }
+
+            html, body { background: #fff !important; }
+            body > :not(#print-summary) { display: none !important; }
+            #print-summary { display: block; }
+        }
     </style>
 </head>
 <body>
@@ -1750,7 +2155,7 @@
     <div class="projects-wrap">
 
         <p class="panel-heading">Toyota Boshoku</p>
-        <p class="panel-sub"><span>Co-op</span><span>Elmira, ON</span><span class="panel-date">Jan–May 2026</span></p>
+        <p class="panel-sub"><span>Co-op</span><span class="panel-date">Jan–May 2026</span></p>
 
         <div class="group">
             <!-- AMR COMPUTER VISION -->
@@ -1884,20 +2289,20 @@
 
                 <div class="img-grid cols-3">
                     <div>
-                        <div class="img-slot">
-                            <img src="Images/UWFE Push Bar Spacer CAD.png" alt="SolidWorks model">
+                        <div class="img-slot" style="aspect-ratio: 4/3;">
+                            <img src="Images/UWFE Push Bar Spacer CAD.png" alt="SolidWorks model" style="height: 100%; object-fit: contain;">
                         </div>
                         <p class="img-caption">SolidWorks model</p>
                     </div>
                     <div>
-                        <div class="img-slot">
-                            <img src="Images/UWFE Push Bar 3D Print.png" alt="3D printed jig">
+                        <div class="img-slot" style="aspect-ratio: 4/3;">
+                            <img src="Images/UWFE Push Bar 3D Print.png" alt="3D printed jig" style="height: 100%; object-fit: contain;">
                         </div>
                         <p class="img-caption">3D printed jig</p>
                     </div>
                     <div>
-                        <div class="img-slot">
-                            <img src="Images/UWFE Push Bar Spacer Assembly Fit.png" alt="Assembly context">
+                        <div class="img-slot" style="aspect-ratio: 4/3;">
+                            <img src="Images/UWFE Push Bar Spacer Assembly Fit.png" alt="Assembly context" style="height: 100%; object-fit: contain;">
                         </div>
                         <p class="img-caption">In-assembly context</p>
                     </div>
@@ -1932,20 +2337,20 @@
 
                 <div class="img-grid cols-3">
                     <div>
-                        <div class="img-slot">
-                            <img src="Images/UWFE Motor Template Drawing.png" alt="Engineering drawing with GD&T">
+                        <div class="img-slot" style="aspect-ratio: 4/3;">
+                            <img src="Images/UWFE Motor Template Drawing.png" alt="Engineering drawing with GD&T" style="height: 100%; object-fit: contain;">
                         </div>
                         <p class="img-caption">GD&amp;T drawing</p>
                     </div>
                     <div>
-                        <div class="img-slot">
-                            <img src="Images/UWFE Motor Template AutoCAD.png" alt="AutoCAD drawing">
+                        <div class="img-slot" style="aspect-ratio: 4/3;">
+                            <img src="Images/UWFE Motor Template AutoCAD.png" alt="AutoCAD drawing" style="height: 100%; object-fit: contain;">
                         </div>
                         <p class="img-caption">AutoCAD drawing</p>
                     </div>
                     <div>
-                        <div class="img-slot">
-                            <img src="Images/UWFE Motor Template SolidWorks.png" alt="SolidWorks model">
+                        <div class="img-slot" style="aspect-ratio: 4/3;">
+                            <img src="Images/UWFE Motor Template SolidWorks.png" alt="SolidWorks model" style="height: 100%; object-fit: contain;">
                         </div>
                         <p class="img-caption">SolidWorks model</p>
                     </div>
@@ -1978,20 +2383,20 @@
 
                 <div class="img-grid cols-3">
                     <div>
-                        <div class="img-slot">
-                            <img src="Images/UWFE Radiator Physical.jpg" alt="Physical radiator">
+                        <div class="img-slot" style="aspect-ratio: 4/3;">
+                            <img src="Images/UWFE Radiator Physical.jpg" alt="Physical radiator" style="height: 100%; object-fit: contain;">
                         </div>
                         <p class="img-caption">Physical radiator</p>
                     </div>
                     <div>
-                        <div class="img-slot">
-                            <img src="Images/UWFE Radiator CAD Front.png" alt="SolidWorks model front">
+                        <div class="img-slot" style="aspect-ratio: 4/3;">
+                            <img src="Images/UWFE Radiator CAD Front.png" alt="SolidWorks model front" style="height: 100%; object-fit: contain;">
                         </div>
                         <p class="img-caption">SolidWorks model (front)</p>
                     </div>
                     <div>
-                        <div class="img-slot">
-                            <img src="Images/UWFE Radiator CAD Back.png" alt="SolidWorks model back">
+                        <div class="img-slot" style="aspect-ratio: 4/3;">
+                            <img src="Images/UWFE Radiator CAD Back.png" alt="SolidWorks model back" style="height: 100%; object-fit: contain;">
                         </div>
                         <p class="img-caption">SolidWorks model (back)</p>
                     </div>
@@ -2041,19 +2446,31 @@
                     Watch Demo
                 </a>
 
-                <div class="img-grid cols-1">
+                <div class="img-grid cols-3">
                     <div>
-                        <div class="img-slot">
-                            <img src="Images/CV Guitar.png" alt="Hand tracking with chord overlay">
+                        <div class="img-slot" style="aspect-ratio: 16/9;">
+                            <img src="Images/Playing Notes and Chord Overlay.png" alt="Playing notes with live chord diagram overlay" style="height: 100%; object-fit: cover;">
                         </div>
-                        <p class="img-caption">Live hand tracking with chord diagram overlay</p>
+                        <p class="img-caption">Note triggers with live chord diagram</p>
+                    </div>
+                    <div>
+                        <div class="img-slot" style="aspect-ratio: 16/9;">
+                            <img src="Images/Swipe Gesture.png" alt="Swipe gesture switching chord groups" style="height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="img-caption">Swipe gesture to switch chord groups</p>
+                    </div>
+                    <div>
+                        <div class="img-slot" style="aspect-ratio: 16/9;">
+                            <img src="Images/Volume Slider.png" alt="Pinch gesture controlling a volume slider" style="height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="img-caption">Pinch-controlled volume slider</p>
                     </div>
                 </div>
 
                 <div class="whi">
                     <div class="whi-block">
                         <p class="whi-label">What</p>
-                        <p class="whi-text">A guitar you play in the air: computer vision reads hand and finger movements from a webcam feed and turns them into musical input, in real time. The left hand selects chords based on finger positions; the right hand triggers individual notes. Visual overlays display chord diagrams and fingertip indicators in the live feed.</p>
+                        <p class="whi-text">A guitar you play in the air: it reads hand and finger movements from a webcam feed and turns them into musical input, in real time. The left hand selects chords based on finger positions; the right hand triggers individual notes. Visual overlays display chord diagrams and fingertip indicators in the live feed.</p>
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">How</p>
@@ -2082,22 +2499,22 @@
                     Watch Demo
                 </a>
 
-                <div class="img-grid cols-2">
+                <div class="img-grid cols-3">
                     <div>
-                        <div class="img-slot">
-                            <img src="Images/Checkers Initial Concept.png" alt="Initial concept sketch">
+                        <div class="img-slot" style="aspect-ratio: 4/3;">
+                            <img src="Images/Checkers Initial Concept.png" alt="Initial concept sketch" style="height: 100%; object-fit: cover;">
                         </div>
                         <p class="img-caption">Initial concept</p>
                     </div>
                     <div>
-                        <div class="img-slot">
-                            <img src="Images/Checkers First Functioning Prototype.png" alt="First functional prototype">
+                        <div class="img-slot" style="aspect-ratio: 4/3;">
+                            <img src="Images/Checkers First Functioning Prototype.png" alt="First functional prototype" style="height: 100%; object-fit: cover;">
                         </div>
                         <p class="img-caption">First functional prototype</p>
                     </div>
                     <div>
-                        <div class="img-slot">
-                            <img src="Images/Checkers Final Design.JPEG" alt="Final design">
+                        <div class="img-slot" style="aspect-ratio: 4/3;">
+                            <img src="Images/Checkers Final Design.JPEG" alt="Final design" style="height: 100%; object-fit: cover;">
                         </div>
                         <p class="img-caption">Final design</p>
                     </div>
@@ -2220,7 +2637,49 @@
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">How</p>
-                        <p class="whi-text">Designed reward shaping to encourage correct approach positioning and reward progress up the ramp, while penalizing any attempt to lift the block. A performance-gated curriculum progressively widened the block's spawn randomization, from a fixed position out to full-table placement, and each stage only unlocked once the policy hit a target success rate. The result generalizes across varied starting positions instead of overfitting to one spawn point.</p>
+                        <p class="whi-text">Designed reward shaping to encourage correct approach positioning and reward progress up the ramp, while penalizing any attempt to lift the block. Training ran in three stages, each building on the last:</p>
+                        <div class="rl-runs-wrap">
+                            <table class="rl-runs">
+                                <thead>
+                                    <tr>
+                                        <th>Run</th>
+                                        <th>Iterations</th>
+                                        <th>Spawn behavior</th>
+                                        <th>Video</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="rl-run-name">Base</td>
+                                        <td>0–1499</td>
+                                        <td>Fixed default block spawn, no randomization</td>
+                                        <td>
+                                            <a href="https://youtu.be/jNswoZWccT0" class="video-btn" target="_blank"><svg viewBox="0 0 10 10" fill="currentColor"><polygon points="1,0.5 9.5,5 1,9.5"/></svg>Watch video</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="rl-run-name">Finetune (randomized)</td>
+                                        <td>1500–1998</td>
+                                        <td>Moderate xy+yaw randomization, fixed range for the whole run</td>
+                                        <td>
+                                            <a href="https://youtu.be/O3A4JFaXUgE" class="video-btn" target="_blank"><svg viewBox="0 0 10 10" fill="currentColor"><polygon points="1,0.5 9.5,5 1,9.5"/></svg>Watch video</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="rl-run-name">Curriculum</td>
+                                        <td>1999–4997</td>
+                                        <td>4-stage performance-gated widening, spawn range widens after each success threshold is met</td>
+                                        <td>
+                                            <!-- Curriculum run: final versions — same clips as the Side/Front View buttons above -->
+                                            <div class="rl-video-cell">
+                                                <a href="https://youtu.be/4_NPltzaN6Y" class="video-btn" target="_blank"><svg viewBox="0 0 10 10" fill="currentColor"><polygon points="1,0.5 9.5,5 1,9.5"/></svg>Side View</a>
+                                                <a href="https://youtu.be/TU9OxlHozC0" class="video-btn" target="_blank"><svg viewBox="0 0 10 10" fill="currentColor"><polygon points="1,0.5 9.5,5 1,9.5"/></svg>Front View</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="whi-block">
                         <p class="whi-label">Impact</p>
@@ -2261,6 +2720,7 @@
             </a>
             <a class="id-link" href="Johnson_Yep_Resume.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5L13.5 3z"/><path d="M13.5 3v5.5H19M9 13h6M9 16.5h6"/></svg>Resume</a>
         </div>
+        <button class="print-summary-link" type="button" onclick="openPrintModal()">Print portfolio summary</button>
     </div>
 
 
@@ -2513,6 +2973,35 @@
     <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">✕</button>
     <img id="lightbox-img" src="" alt="">
 </div>
+
+<!-- Print summary options: project checkboxes + Full/Condensed toggle -->
+<div class="print-modal" id="print-modal" role="dialog" aria-modal="true" aria-label="Print portfolio summary options">
+    <div class="print-modal-panel">
+        <p class="print-modal-title">Print portfolio summary</p>
+
+        <div class="print-modal-modes" role="radiogroup" aria-label="Detail level">
+            <label class="print-mode-opt"><input type="radio" name="print-mode" value="full" checked> Full</label>
+            <label class="print-mode-opt"><input type="radio" name="print-mode" value="condensed"> Condensed</label>
+        </div>
+
+        <div class="print-modal-bulk">
+            <button class="print-bulk-btn" id="print-select-all" type="button">Select all</button>
+            <button class="print-bulk-btn" id="print-deselect-all" type="button">Deselect all</button>
+        </div>
+
+        <!-- Checkbox list, grouped by category — built by JS from the page content -->
+        <div class="print-modal-list" id="print-modal-list"></div>
+
+        <div class="print-modal-actions">
+            <button class="print-cancel-btn" id="print-cancel" type="button">Cancel</button>
+            <button class="print-generate-btn" id="print-generate" type="button">Generate PDF</button>
+        </div>
+    </div>
+</div>
+
+<!-- Print-only portfolio summary: populated by buildPrintSummary() from the
+     on-page content, shown only via the @media print rules -->
+<div id="print-summary" aria-hidden="true"></div>
 
 <script>
     /* ── Theme toggle ── */
@@ -3610,7 +4099,8 @@
     // returns early and lets it close the lightbox instead.
     document.addEventListener('keydown', (e) => {
         if (e.key !== 'Escape') return;
-        if (lightbox.classList.contains('open') || lab.classList.contains('open')) return;
+        if (lightbox.classList.contains('open') || lab.classList.contains('open') ||
+            document.getElementById('print-modal').classList.contains('open')) return;
         if (document.getElementById('global-back').style.display !== 'none') navigate('');
     });
 
@@ -4021,6 +4511,339 @@
     initSkillsCarousel();
     // The hub may have been hidden on load (deep link) — init once it shows
     window.addEventListener('hashchange', initSkillsCarousel);
+
+    /* ── Print portfolio summary ──
+       "Print portfolio summary" (Me page) opens a modal to pick projects and
+       a Full/Condensed detail level; Generate rebuilds #print-summary from
+       the checked projects and calls window.print(). Content is always
+       extracted from the on-page DOM so the printed version can never drift
+       out of sync. Plain Ctrl/Cmd+P works too: the summary is pre-built at
+       load with the modal defaults (every project, Full). It is only ever
+       shown through the @media print rules. */
+    const PRINT_CATEGORIES = ['cat-toyota', 'cat-watonomous', 'cat-uwfe', 'cat-personal'];
+
+    // selectedIds: Set of project ids, or null for every project.
+    // mode: 'full' (What/How/Impact + up to 3 images) or 'condensed'
+    // (Impact only + 1 small thumbnail).
+    function buildPrintSummary(selectedIds, mode) {
+        const root = document.getElementById('print-summary');
+        if (!root) return;
+        root.textContent = '';
+        root.className = mode === 'condensed' ? 'ps-condensed' : 'ps-full';
+
+        const text = (node) => (node && node.textContent ? node.textContent.trim() : '');
+        const make = (tag, cls, txt) => {
+            const n = document.createElement(tag);
+            if (cls) n.className = cls;
+            if (txt) n.textContent = txt;
+            return n;
+        };
+
+        // Header: document title, then name, program, email — technical only
+        const header = make('div', 'ps-header');
+        header.appendChild(make('p', 'ps-doc-title', 'Portfolio'));
+        const name = text(document.querySelector('.me-name'));
+        if (name) header.appendChild(make('h1', 'ps-name', name));
+        // The email-copy setup rewrites the button with a hidden "Copied"
+        // overlay span — read only the visible .email-default part
+        const emailBtn = document.querySelector('.nav-email');
+        const meta = [
+            text(document.querySelector('.me-tagline')),
+            text(emailBtn && (emailBtn.querySelector('.email-default') || emailBtn))
+        ].filter(Boolean).join(' · ');
+        if (meta) header.appendChild(make('p', 'ps-header-meta', meta));
+        if (header.childNodes.length) root.appendChild(header);
+
+        PRINT_CATEGORIES.forEach((catId) => {
+            const cat = document.getElementById(catId);
+            if (!cat) return;
+
+            const section = make('section', 'ps-cat');
+            const heading = make('h2', 'ps-cat-heading', text(cat.querySelector('.panel-heading')));
+            const date = text(cat.querySelector('.panel-sub .panel-date'));
+            if (date) heading.appendChild(make('span', 'ps-cat-date', date));
+            section.appendChild(heading);
+
+            let projectCount = 0;
+            cat.querySelectorAll('.project').forEach((project) => {
+                if (selectedIds && !selectedIds.has(project.id)) return;
+
+                const block = make('div', 'ps-project');
+
+                // Skip images whose src is missing or already known broken,
+                // and drop any that fail to load — no broken icons on paper
+                const images = Array.from(project.querySelectorAll('.img-grid img'))
+                    .filter((img) => img.getAttribute('src') && !(img.complete && img.naturalWidth === 0));
+                const addImage = (parent, img, cls) => {
+                    const copy = make('img', cls);
+                    copy.alt = img.alt || '';
+                    copy.onerror = () => copy.remove();
+                    copy.src = img.getAttribute('src');
+                    parent.appendChild(copy);
+                };
+
+                // Condensed: one small thumbnail, added first so it floats
+                // beside the text (any project with images, not just flagships)
+                if (mode === 'condensed' && images.length) addImage(block, images[0], 'ps-thumb');
+
+                // Full-mode blocks may break across pages, so the title,
+                // stack, links and images go in a head wrapper that stays
+                // in one piece and never strands at the bottom of a page.
+                // Condensed blocks are atomic already — no wrapper needed.
+                const head = mode === 'condensed' ? block : make('div', 'ps-project-head');
+
+                const title = text(project.querySelector('.project-title'));
+                if (title) head.appendChild(make('h3', 'ps-title', title));
+
+                const tags = Array.from(project.querySelectorAll('.stack .tag'))
+                    .map(text).filter(Boolean);
+                if (tags.length) head.appendChild(make('p', 'ps-stack', tags.join(', ')));
+
+                // Exclude video buttons living inside a data table (e.g. the
+                // rl-arm training runs) — those render within the cloned table,
+                // not in this top-of-project links line.
+                const links = Array.from(project.querySelectorAll('a.video-btn'))
+                    .filter((a) => a.getAttribute('href') && text(a) && !a.closest('.rl-runs'));
+                if (links.length) {
+                    const line = make('p', 'ps-links');
+                    links.forEach((a, i) => {
+                        if (i) line.appendChild(make('span', 'ps-sep', '·'));
+                        const link = make('a', null, text(a));
+                        link.href = a.href;
+                        line.appendChild(link);
+                    });
+                    head.appendChild(line);
+                }
+
+                // Full: a row of the project's images (up to 3) before the text
+                if (mode !== 'condensed' && images.length) {
+                    const row = make('div', 'ps-imgs');
+                    images.slice(0, 3).forEach((img) => addImage(row, img, null));
+                    head.appendChild(row);
+                }
+                if (head !== block) block.appendChild(head);
+
+                // Collect the whi-blocks; degrade gracefully on odd markup
+                const whi = [];
+                project.querySelectorAll('.whi-block').forEach((b) => {
+                    const body = text(b.querySelector('.whi-text'));
+                    if (body) whi.push({ label: text(b.querySelector('.whi-label')), body: body, el: b });
+                });
+
+                if (mode === 'condensed') {
+                    // Impact is the condensed description; fall back to the
+                    // last descriptive text found rather than throwing
+                    const impact = whi.find((w) => w.label === 'Impact') || whi[whi.length - 1];
+                    if (impact) block.appendChild(make('p', 'ps-impact', impact.body));
+                } else {
+                    whi.forEach((w) => {
+                        const p = make('p', 'ps-whi');
+                        if (w.label) {
+                            p.appendChild(make('span', 'ps-whi-label', w.label));
+                            p.appendChild(document.createTextNode(' — '));
+                        }
+                        p.appendChild(document.createTextNode(w.body));
+                        block.appendChild(p);
+                        // Clone any data table in this whi-block (e.g. the
+                        // rl-arm training runs) so it prints under the text.
+                        // Links keep their hrefs, so they stay clickable in
+                        // the PDF; print styling forces black-on-white.
+                        const table = w.el && w.el.querySelector('table');
+                        if (table) {
+                            const wrap = make('div', 'ps-table-wrap');
+                            wrap.appendChild(table.cloneNode(true));
+                            block.appendChild(wrap);
+                        }
+                    });
+                }
+
+                if (title || tags.length || links.length || whi.length || images.length) {
+                    section.appendChild(block);
+                    projectCount++;
+                }
+            });
+
+            if (projectCount) root.appendChild(section);
+        });
+    }
+
+    /* Modal wiring: checkbox list grouped by category, Full/Condensed toggle,
+       select/deselect all, focus trap. Selection and mode live in the DOM,
+       persist across opens, and never reset each other. */
+    const printModal = document.getElementById('print-modal');
+    const printModalPanel = printModal.querySelector('.print-modal-panel');
+    const printModalList = document.getElementById('print-modal-list');
+    const printGenerateBtn = document.getElementById('print-generate');
+    let printModalReturnFocus = null;
+
+    PRINT_CATEGORIES.forEach((catId) => {
+        const cat = document.getElementById(catId);
+        if (!cat) return;
+        const projects = Array.from(cat.querySelectorAll('.project')).filter((p) => p.id);
+        if (!projects.length) return;
+        const catLabel = document.createElement('p');
+        catLabel.className = 'print-cat-label';
+        const headingEl = cat.querySelector('.panel-heading');
+        catLabel.textContent = headingEl ? headingEl.textContent.trim() : '';
+        printModalList.appendChild(catLabel);
+        projects.forEach((project) => {
+            const opt = document.createElement('label');
+            opt.className = 'print-proj-opt';
+            const box = document.createElement('input');
+            box.type = 'checkbox';
+            box.checked = true;
+            box.value = project.id;
+            const title = document.createElement('span');
+            const titleEl = project.querySelector('.project-title');
+            title.textContent = titleEl ? titleEl.textContent.trim() : project.id;
+            opt.appendChild(box);
+            opt.appendChild(title);
+            printModalList.appendChild(opt);
+        });
+    });
+
+    function updatePrintGenerate() {
+        printGenerateBtn.disabled = !printModalList.querySelector('input:checked');
+    }
+    printModalList.addEventListener('change', updatePrintGenerate);
+
+    function setAllPrintChecks(on) {
+        printModalList.querySelectorAll('input').forEach((box) => { box.checked = on; });
+        updatePrintGenerate();
+    }
+    document.getElementById('print-select-all').addEventListener('click', () => setAllPrintChecks(true));
+    document.getElementById('print-deselect-all').addEventListener('click', () => setAllPrintChecks(false));
+
+    function openPrintModal() {
+        printModalReturnFocus = document.activeElement;
+        printModal.classList.add('open');
+        document.body.classList.add('print-modal-open');
+        const first = printModal.querySelector('input[name="print-mode"]:checked');
+        if (first) first.focus();
+    }
+
+    function closePrintModal() {
+        printModal.classList.remove('open');
+        document.body.classList.remove('print-modal-open');
+        if (printModalReturnFocus && printModalReturnFocus.focus) printModalReturnFocus.focus();
+        printModalReturnFocus = null;
+    }
+
+    printGenerateBtn.addEventListener('click', () => {
+        const checked = new Set(
+            Array.from(printModalList.querySelectorAll('input:checked')).map((box) => box.value));
+        if (!checked.size) return; // button is disabled at zero, but be safe
+        const mode = printModal.querySelector('input[name="print-mode"]:checked').value;
+        buildPrintSummary(checked, mode);
+        closePrintModal();
+        // let the freshly cloned images decode first so the auto-fit
+        // measurement on beforeprint sees their real heights
+        const imgs = Array.from(document.querySelectorAll('#print-summary img'));
+        Promise.all(imgs.map((im) => im.decode ? im.decode().catch(() => {}) : Promise.resolve()))
+            .then(() => window.print());
+    });
+    document.getElementById('print-cancel').addEventListener('click', closePrintModal);
+
+    // Backdrop click closes without generating
+    printModal.addEventListener('click', (e) => {
+        if (e.target === printModal) closePrintModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (!printModal.classList.contains('open')) return;
+        if (e.key === 'Escape') { closePrintModal(); return; }
+        if (e.key !== 'Tab') return;
+        // Trap focus: cycle within the panel's enabled controls
+        const focusables = Array.from(printModalPanel.querySelectorAll('button, input'))
+            .filter((n) => !n.disabled);
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (!printModalPanel.contains(document.activeElement)) {
+            e.preventDefault();
+            first.focus();
+        } else if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+        }
+    });
+
+    // Plain Ctrl/Cmd+P without the modal: everything, Full — the defaults
+    buildPrintSummary(null, 'full');
+
+    /* Auto-fit: if the summary barely spills onto one more page (leaving a
+       mostly blank last page), step through the ps-shrink levels — smaller
+       type, images and spacing — until it tucks back onto the previous
+       page. Runs on beforeprint, so it covers both the modal flow and a
+       plain Ctrl/Cmd+P, and re-fits from scratch on every print. */
+    const PS_PAGE_H = 9.8 * 96;  // letter minus 0.6in margins, in CSS px
+    const PS_PAGE_W = 7.3 * 96;
+    const PS_SLIGHT_SPILL = 0.2; // "slight" = last page under 20% full
+
+    // Simulates print fragmentation: walks the unbreakable units in order,
+    // pushing any unit that crosses a page boundary onto the next page
+    // (like break-inside: avoid does), and returns the resulting page
+    // count plus how full the last page is.
+    function measurePrintPages(root) {
+        const rootTop = root.getBoundingClientRect().top;
+        const units = Array.from(root.querySelectorAll(
+            root.classList.contains('ps-condensed')
+                ? '.ps-header, .ps-cat-heading, .ps-project'
+                : '.ps-header, .ps-cat-heading, .ps-project-head, .ps-whi, .ps-table-wrap'));
+        let shift = 0;
+        let pages = 1;
+        let pageBottom = PS_PAGE_H;
+        let contentBottom = 0;
+        units.forEach((u, i) => {
+            const r = u.getBoundingClientRect();
+            let top = r.top - rootTop + shift;
+            // a category heading never sits alone at a page bottom (it has
+            // break-after: avoid) — judge it together with what follows
+            let keepHeight = r.height;
+            if (u.classList.contains('ps-cat-heading') && units[i + 1]) {
+                keepHeight = units[i + 1].getBoundingClientRect().bottom - r.top;
+            }
+            if (top + keepHeight > pageBottom) {
+                if (keepHeight <= PS_PAGE_H) {
+                    shift += pageBottom - top;
+                    top = pageBottom;
+                }
+                while (top + r.height > pageBottom) {
+                    pages++;
+                    pageBottom += PS_PAGE_H;
+                }
+            }
+            contentBottom = Math.max(contentBottom, top + r.height);
+        });
+        const lastFill = (contentBottom - (pageBottom - PS_PAGE_H)) / PS_PAGE_H;
+        return { pages: pages, lastFill: Math.min(Math.max(lastFill, 0), 1) };
+    }
+
+    function fitPrintSummary() {
+        const root = document.getElementById('print-summary');
+        if (!root || !root.firstChild) return;
+        root.classList.remove('ps-shrink-1', 'ps-shrink-2');
+        // lay it out invisibly at print width so the rects are measurable
+        root.style.cssText = 'display:block;position:absolute;left:-9999px;top:0;'
+            + 'width:' + PS_PAGE_W + 'px;visibility:hidden';
+        try {
+            const start = measurePrintPages(root);
+            if (start.pages < 2 || start.lastFill > PS_SLIGHT_SPILL) return;
+            for (let level = 1; level <= 2; level++) {
+                root.classList.remove('ps-shrink-' + (level - 1));
+                root.classList.add('ps-shrink-' + level);
+                if (measurePrintPages(root).pages < start.pages) return; // fits
+            }
+            // even the strongest level didn't save a page — keep full size
+            root.classList.remove('ps-shrink-2');
+        } finally {
+            root.style.cssText = '';
+        }
+    }
+    window.addEventListener('beforeprint', fitPrintSummary);
 </script>
 
 </body>
